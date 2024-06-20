@@ -458,7 +458,7 @@ def the_R_vs_T_part(p):
         st.warning('there is some issue in calculating error')
 
     # Display options for viewing data
-    option = st.selectbox("Select4:", ["1) the data table of (R vs T)?",\
+    option = st.selectbox("Select:", ["1) the data table of (R vs T)?",\
                                        "2) the graph of (R vs T) in logscale",\
                                      "3) the graph of (R vs T) without logscale"], key='tvrhere2201{p}')  # Unique key
 
@@ -595,7 +595,7 @@ def the_Frequency_vs_Luminosity_part(p):
     st.info(f"{f_lmax:e} Hz lies in {spectrum_category(f_lmax)} ")
    # st.info(f"difference between max frequency and F2 is : {f_lmax - F2 :e} ")
     
-    option = st.selectbox("Select2:", ["1) the graph of (F vs L)?", "2) the slopes of (F vs L)?","3) the data table of f vs l"], key="{p}frequency_vs_luminosity")
+    option = st.selectbox("Select:", ["1) the graph of (F vs L)?", "2) the slopes of (F vs L)?","3) the data table of f vs l"], key="{p}frequency_vs_luminosity")
 
     if option == "1) the graph of (F vs L)?":
         plot_log_scale(frequencies, luminosities,F12=True,xlabel='log(frequencies)',ylabel='log(luminosities)')
@@ -661,7 +661,7 @@ def the_Frequency_vs_Luminosity_part2(p):
 
     #st.info(f"difference between max frequency and F2 is : {f_lmax - F2 :e} ")
     
-    option = st.selectbox("Select2:", ["1) the graph of (F vs L)?", "2) the slopes of (F vs L)?","3) the data table of f vs l"], key="{p}frequency_vs_luminosity")
+    option = st.selectbox("Select:", ["1) the graph of (F vs L)?", "2) the slopes of (F vs L)?","3) the data table of f vs l"], key="{p}frequency_vs_luminosity")
 
     if option == "1) the graph of (F vs L)?":
         plot_log_scale(frequencies, luminosities,F12=True,xlabel='log(frequencies)',ylabel='log(luminosities)')
