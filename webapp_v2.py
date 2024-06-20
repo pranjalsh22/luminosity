@@ -706,6 +706,7 @@ def the_Frequency_vs_Luminosity_part2(p):
 def run(p):
     p+=1
     st.markdown('# Spectrum of Standard Accretion Disk')
+    st.write("<div style='text-align: right;'>by Pranjal</div>", unsafe_allow_html=True)
     option_selected = st.selectbox("Select Property :", ["Temprature Profile",\
                                                "Luminosity profile (with approximation)",\
                                                "Luminosity profile (without approximation)"], key="run_selectbox")
