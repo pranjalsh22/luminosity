@@ -592,8 +592,8 @@ def the_Frequency_vs_Luminosity_part(p):
         st.info(f'The maximum luminosity = {lmax:e} watt/m^2Hz observed at frequency {f_lmax:e} Hz.')
     except:
         st.warning('there is some issue in calculating error')
-    st.info(f"The max frequency lies in {spectrum_category(f_lmax)} ")
-    st.info(f"difference between max frequency and F2 is : {f_lmax - F2 :e} ")
+    st.info(f"{f_lmax:e} Hz lies in {spectrum_category(f_lmax)} ")
+   # st.info(f"difference between max frequency and F2 is : {f_lmax - F2 :e} ")
     
     option = st.selectbox("Select2:", ["1) the graph of (F vs L)?", "2) the slopes of (F vs L)?","3) the data table of f vs l"], key="{p}frequency_vs_luminosity")
 
@@ -657,9 +657,9 @@ def the_Frequency_vs_Luminosity_part2(p):
         st.info(f'The maximum luminosity = {lmax:e} watt/m^2Hz observed at frequency {f_lmax:e} Hz.')
     except:
         st.warning('there is some issue in calculating error')
-    st.info(f"The max frequency lies in {spectrum_category(f_lmax)} ")
+    st.info(f"{f_lmax:e} Hz lies in {spectrum_category(f_lmax)} ")
 
-    st.info(f"difference between max frequency and F2 is : {f_lmax - F2 :e} ")
+    #st.info(f"difference between max frequency and F2 is : {f_lmax - F2 :e} ")
     
     option = st.selectbox("Select2:", ["1) the graph of (F vs L)?", "2) the slopes of (F vs L)?","3) the data table of f vs l"], key="{p}frequency_vs_luminosity")
 
