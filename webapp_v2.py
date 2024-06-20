@@ -315,6 +315,26 @@ def wavelength_category(wavelength):
         return "Red"
     else:
         return "Infrared (IR)"
+def spectrum_category(frequency):
+    
+    if frequency < 3e9:  # Radio
+        return "Radio"
+    elif 3e9 <= frequency < 3e12:  # Microwave
+        return "Microwave"
+    elif 3e12 <= frequency < 4.3e14:  # Infrared
+        return "Infrared"
+    elif 4.3e14 <= frequency < 7.5e14:  # Visible
+        return "Visible"
+    elif 7.5e14 <= frequency < 3e16:  # Lower Ultraviolet
+        return "Lower UV"
+    elif 3e16 <= frequency < 3e17:  # Ultraviolet
+        return "Ultraviolet"
+    elif 3e17 <= frequency < 3e19:  # Higher Ultraviolet
+        return "Higher UV"
+    elif 3e19 <= frequency < 3e21:  # X-ray
+        return "X-ray"
+    else:  # Gamma-ray
+        return "Gamma-ray"
 
 def generate_pattern(n):
     result = []
@@ -327,7 +347,7 @@ def generate_pattern(n):
                     break
                 result.append(value)
         current *= 10
-    for i in range(1,r_i_rs):
+    for i in range(1,r_i_rs+1):
         try:
             result.remove(i)
         except:
@@ -338,6 +358,11 @@ def savethegraph():
     if st.button('save'):
         plt.savefig(name)
         st.write(f'Graph saved as {name}')
+
+def flux_density_nu(nu, T):
+    numerator = 2 * h * nu**3 / c**2
+    denominator = np.exp(h * nu / (k * T)) - 1
+    return numerator / denominator
 
 #---------------------------------------------------------------------------------------------------------
 st.sidebar.markdown('# Input values')
@@ -356,12 +381,21 @@ r_i = r_i_rs * r_s
 r_o_rs = st.sidebar.number_input("Value of r_o in units of Schwarzschild radius (r_s)", value=1e5)
 r_o = r_o_rs * r_s
 
-eddington_ratio = st.sidebar.number_input("Eddington ratio", value=0.1)
-accretion_efficiency = 0.1  # You can provide a default value or add an input for this if required
-
 # Calculate mass accretion rate
-m_dot = (eddington_ratio / accretion_efficiency) * (1.3e31 / c ** 2) * m_bh
-
+accretion_efficiency = 0.1  
+def m_dotf(eddington_ratio):
+    return (eddington_ratio / accretion_efficiency) * (1.3e31 / c ** 2) * m_bh
+def eddington_ratiof(mdot):
+    
+    return m_dot*accretion_efficiency*(c**2)/(1.3e31*m_bh)
+choice=st.sidebar.selectbox('define either ',['accretion rate','eddington ratio'])
+if choice =='accretion rate':
+    mdot = st.sidebar.number_input("Accretion Rate in solar masses per year", format="%f", value=0.22960933114483387)
+    m_dot=mdot*m_sun_kg/(31536000)
+    eddington_ratio=eddington_ratiof(m_dot)
+if choice =='eddington ratio':
+    eddington_ratio = st.sidebar.number_input("Eddington ratio", value=0.1, format="%f")
+    m_dot=m_dotf(eddington_ratio)
 
 #m_dot = eddington_ratio*1.3e31*m_bh_kg/(0.1*(c**2)*m_sun_kg)
 t_disk=(3*G*m_bh_kg*m_dot/(8*pi*sbc*(r_i**3)))**0.25
@@ -376,6 +410,7 @@ st.sidebar.text(\
     f"r_s = {r_s} m\n"
     f"r_i = {r_i} m\n"
     f"r_o = {r_o} m\n"
+    f"eddington_ratio={eddington_ratio} \n"
     f"m_dot = {m_dot} kg/s\n"
     f"m_dot = {m_dot*31557600/m_sun_kg} solarmass/year\n"
     f"t_o = {t_o} K\n"
@@ -440,10 +475,12 @@ def the_R_vs_T_part(p):
     elif option == "3) the graph of (R vs T) without logscale":
         plotit(radii, temperatures,xlabel="Radius (Rs)",ylabel="Temprature  (K)")
 
+#---------------------------------------------------------------------------------------------------------
 
 
 def the_wavelength_vs_flux_part(p):
     p+=1
+    st.latex(r"B_{\lambda}(\lambda, T) = \frac{2hc^2}{\lambda^5} \frac{1}{e^{hc/\lambda k_B T} - 1}")
     global wavelengths,fluxes_list
     # Defining wavelengths
     wavelengths = np.linspace(1e-9, 3e-7, 50000)  # meters
@@ -457,9 +494,9 @@ def the_wavelength_vs_flux_part(p):
         fluxes = [np.pi * B_lambda(wavelength, t) for wavelength in wavelengths]
         fluxes_list.append(fluxes)
 
-    option = st.selectbox("Do you want to see the graph of (flux vs wavelength)?", ["Yes", "No"], key='{p}flux_n_wavelength')  # Unique key
+    option = st.selectbox("Options", ["the graph of (flux vs wavelength)", "Dataset"], key='{p}flux_n_wavelength')  # Unique key
 
-    if option == "Yes":
+    if option == "the graph of (flux vs wavelength)":
         for i in range(len(temprat)):
             plt.plot(wavelengths * 1e9, scaleit(fluxes_list[i], 1e-4), label=f'{temprat[i]} K')
         plt.xlabel('Wavelength (nm)')
@@ -468,7 +505,7 @@ def the_wavelength_vs_flux_part(p):
         plt.legend()
         plt.grid(True)
         st.pyplot()
-
+    #DATASET NOT SET 
     st.write("")
     st.write('Peak wavelength should be -:')
     st.write('s.no.  temprature(K)  wavelength(nm)')
@@ -481,6 +518,52 @@ def the_wavelength_vs_flux_part(p):
         wmax = next(key for key, value in f_vs_W.items() if value == fmax) * 1e9
         st.write(f'Maximum flux is {fmax} at wavelength {wmax} nm')
         st.write(f'It falls in the range {wavelength_category(wmax)}')
+#---------------------------------------------------------------------------------------------------------
+
+def the_frequency_vs_flux_part(p):
+    p += 1
+    st.latex(r"B_\nu(T) = \frac{2 h \nu^3}{c^2} \frac{1}{e^{\frac{h \nu}{k T}} - 1}")
+    global frequencies, fluxes_list
+    # Defining frequencies
+    frequencies = np.linspace(1e14, 1e18, 500)  # in Hz (adjust range as needed)
+
+    # Defining flux at different temperatures (in Kelvin)
+    temperatures = [1e5, 2e5, 3e5]
+
+    fluxes_list = []
+    for T in temperatures:
+        fluxes = [flux_density_nu(nu, T) for nu in frequencies]
+        fluxes_list.append(fluxes)
+
+    option = st.selectbox("Do you want to see the graph of (flux vs frequency)?", ["Yes", "No"], key=f'{p}flux_vs_frequency')  # Unique key
+
+    if option == "Yes":
+        for i in range(len(temperatures)):
+            plt.plot(frequencies / 1e15, fluxes_list[i], label=f'{temperatures[i]} K')
+        plt.xlabel('Frequency (10^15 Hz)')
+        plt.ylabel('Flux Density (W/m^2/Hz/sr)')
+        plt.title('Blackbody Radiation from Accretion Disk at Different Temperatures')
+        plt.legend()
+        plt.grid(True)
+        st.pyplot()
+
+    st.write("")
+    st.write('Peak frequency should be -:')
+    st.write('s.no.  temperature (K)  frequency (10^15 Hz)')
+    st.table({'Temperature (K)': temperatures, 'Frequency (10^15 Hz)': [2.82143937212*(k/(h*1e15))* T for T in temperatures]})
+
+    for i in range(len(temperatures)):
+        st.write(f'For temperature = {temperatures[i]} K')
+        f_vs_nu = dict(zip(frequencies, fluxes_list[i]))
+        fmax = max(fluxes_list[i])
+        numax = next(key for key, value in f_vs_nu.items() if value == fmax) / 1e15
+        st.write(f'Maximum flux density is {fmax} W/m^2/Hz/sr at frequency {numax} x 10^15 Hz')
+        st.write(f'It falls in the range {spectrum_category(fmax)}')
+        # Additional information can be added here based on your needs
+
+
+
+#---------------------------------------------------------------------------------------------------------
 
 def the_Frequency_vs_Luminosity_part(p):
     global frequencies, luminosities
@@ -492,12 +575,31 @@ def the_Frequency_vs_Luminosity_part(p):
     st.latex(r'where,\ \ x(r)=\frac{h \nu}{k T(r)} ')
 
     L=integrate_curve(frequencies,luminosities,a=1e10,b=1e15) 
-    st.info(f"net Luminosity is {L}")
+    st.info(f"net Luminosity is {L} ")
+    # Storing values of r and t together in R_vs_T
+    dataset=pd.DataFrame({"frequency":frequencies,"Luminosity":luminosities})
 
+    # Finding maximum and minimum temperatures
+    try:
+        lmax = max(luminosities)
+        
+    except:
+        lmin, lmax = 'undetermined', 'undetermined'
+    try:     
+       # Finding r at maximum temperature
+        f_lmax = dataset.loc[dataset['Luminosity'] == lmax, 'frequency'].values[0]
+        #display maximum temprature
+        st.info(f'The maximum luminosity = {lmax:e} watt/m^2Hz observed at frequency {f_lmax:e} Hz.')
+    except:
+        st.warning('there is some issue in calculating error')
+    st.info(f"The max frequency lies in {spectrum_category(f_lmax)} ")
+    st.info(f"difference between max frequency and F2 is : {f_lmax - F2 :e} ")
+    
     option = st.selectbox("Select2:", ["1) the graph of (F vs L)?", "2) the slopes of (F vs L)?","3) the data table of f vs l"], key="{p}frequency_vs_luminosity")
 
     if option == "1) the graph of (F vs L)?":
         plot_log_scale(frequencies, luminosities,F12=True,xlabel='log(frequencies)',ylabel='log(luminosities)')
+
     # To find slopes
     if option == "2) the slopes of (F vs L)?":
         log_frequencies = np.log(frequencies)
@@ -523,19 +625,42 @@ def the_Frequency_vs_Luminosity_part(p):
         save_data(dataset)
         if st.button("show data"):
             st.table(dataset)
-        
+#---------------------------------------------------------------------------------------------------------
+
 def the_Frequency_vs_Luminosity_part2(p):
     global frequencies, luminosities
     p+=1
-    frequencies=sorted([10**n for n in range(1,21)]+[3*10**n for n in range (0,21)]+[7*10**n for n in range (0,21)])
+    #frequencies=sorted([10**n for n in range(1,21)]+[3*10**n for n in range (0,21)]+[7*10**n for n in range (0,21)])
+    frequencies=sorted([10**n for n in range(1,18)]+[3*10**n for n in range (0,17)])
 
-    luminosities=np.array([np.float128(luminosity2(i)) for i in frequencies])
+    luminosities=np.array([luminosity2(i) for i in frequencies])
     st.latex(r'L_\nu = \frac{16 \pi^2 h \nu^3}{c^2} cosi \int_{r_i}^{r_o}  \frac{r}{e^{\frac{h \nu}{k T(r)}}-1} d r')
 
     L=integrate_curve(frequencies,luminosities,a=1e10,b=1e15) 
 
-    st.info(f"net Luminosity is {L}")
+    st.info(f"Net Luminosity is {L}")
+    st.info(f'Peak energy  {h*F2/(1.60217663e-19*1e-3)}  KeV')
+    
+    # Storing values of r and t together in R_vs_T
+    dataset=pd.DataFrame({"frequency":frequencies,"Luminosity":luminosities})
 
+    # Finding maximum and minimum temperatures
+    try:
+        lmax = max(luminosities)
+        
+    except:
+        lmin, lmax = 'undetermined', 'undetermined'
+    try:     
+       # Finding r at maximum temperature
+        f_lmax = dataset.loc[dataset['Luminosity'] == lmax, 'frequency'].values[0]
+        #display maximum temprature
+        st.info(f'The maximum luminosity = {lmax:e} watt/m^2Hz observed at frequency {f_lmax:e} Hz.')
+    except:
+        st.warning('there is some issue in calculating error')
+    st.info(f"The max frequency lies in {spectrum_category(f_lmax)} ")
+
+    st.info(f"difference between max frequency and F2 is : {f_lmax - F2 :e} ")
+    
     option = st.selectbox("Select2:", ["1) the graph of (F vs L)?", "2) the slopes of (F vs L)?","3) the data table of f vs l"], key="{p}frequency_vs_luminosity")
 
     if option == "1) the graph of (F vs L)?":
@@ -574,30 +699,35 @@ def the_Frequency_vs_Luminosity_part2(p):
 
             # Display the data table
             st.table(d_scientific)
-        
-        
+            
+#---------------------------------------------------------------------------------------------------------
+   
         
 def run(p):
     p+=1
     st.markdown('# Spectrum of Standard Accretion Disk')
-    option_selected = st.selectbox("Select Property :", ["1) the R_vs_T part",\
-                                               "2)(with approx) the Frequency_vs_Luminosity_part",\
-                                               "3)(without approx) the Frequency_vs_Luminosity_part",\
-                                               "4) the wavelength_vs_flux part"], key="run_selectbox")
+    option_selected = st.selectbox("Select Property :", ["Temprature Profile",\
+                                               "Luminosity profile (with approximation)",\
+                                               "Luminosity profile (without approximation)"], key="run_selectbox")
 
-    if option_selected == "1) the R_vs_T part":
+    if option_selected == "Temprature Profile":
         p+=1
         the_R_vs_T_part(p)
         
-    elif option_selected == "2)(with approx) the Frequency_vs_Luminosity_part":
+    elif option_selected == "Luminosity profile (with approximation)":
         p+=1
         the_Frequency_vs_Luminosity_part(p)
-    elif option_selected == "3)(without approx) the Frequency_vs_Luminosity_part":
+    elif option_selected == "Luminosity profile (without approximation)":
         p+=1
         the_Frequency_vs_Luminosity_part2(p)
-    elif option_selected == "4) the wavelength_vs_flux part":
+    elif option_selected == "Flux profile":
         p+=1
-        the_wavelength_vs_flux_part(p)
+        option1=st.checkbox("dependent on frequency")
+        if option1:
+            the_frequency_vs_flux_part(p)
+        option2=st.checkbox("dependent on wavelength")
+        if option2:
+            the_wavelength_vs_flux_part(p)
 p=1
 run(p)
-
+'''Disclaimer : The flux part has been removed from the options'''
