@@ -454,6 +454,7 @@ def the_R_vs_T_part(p):
         r_tmax = dataset.loc[dataset['temperatures'] == tmax, 'radius in rs'].values[0]
         #display maximum temprature
         st.info(f'The maximum temperature = {tmax:e} K observed at radius {r_tmax:e} Rs.')
+        st.info(f'The minimum temprature = {temp(r_o_rs)} K ')
     except:
         st.warning('there is some issue in calculating error')
 
