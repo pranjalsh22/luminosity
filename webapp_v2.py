@@ -426,7 +426,7 @@ st.sidebar.text(\
 def the_R_vs_T_part(p):
     p+=1
     global radii, temperatures
-    st.markdown('# Radius-Temprature relationship')
+    st.markdown('# Radius-Temperature relationship')
     st.latex(r" T(r)^4 =\left( \frac {3GM_0\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_i}{r}}}{r^3} \right]")
     # Creating list of radii
     radii = generate_pattern(r_o_rs)
@@ -454,7 +454,7 @@ def the_R_vs_T_part(p):
         r_tmax = dataset.loc[dataset['temperatures'] == tmax, 'radius in rs'].values[0]
         #display maximum temprature
         st.info(f'The maximum temperature = {tmax:e} K observed at radius {r_tmax:e} Rs.')
-        st.info(f'The minimum temprature = {temp(r_o_rs)} K ')
+        st.info(f'The minimum temperature = {temp(r_o_rs)} K ')
     except:
         st.warning('there is some issue in calculating error')
 
@@ -471,10 +471,10 @@ def the_R_vs_T_part(p):
 
     # Plotting the graph for radius vs temperature
     elif option == "2) the graph of (R vs T) in logscale":
-        plot_log_scale(radii, temperatures,xlabel="log(radius) (Rs)",ylabel="log(temprature) (K)")
+        plot_log_scale(radii, temperatures,xlabel="log(radius) (Rs)",ylabel="log(temperature) (K)")
 
     elif option == "3) the graph of (R vs T) without logscale":
-        plotit(radii, temperatures,xlabel="Radius (Rs)",ylabel="Temprature  (K)")
+        plotit(radii, temperatures,xlabel="Radius (Rs)",ylabel="Temperature  (K)")
 
 #---------------------------------------------------------------------------------------------------------
 
@@ -708,11 +708,11 @@ def run(p):
     p+=1
     st.markdown('# Spectrum of Standard Accretion Disk')
     st.write("<div style='text-align: right;'>by Pranjal</div>", unsafe_allow_html=True)
-    option_selected = st.selectbox("Select Property :", ["Temprature Profile",\
+    option_selected = st.selectbox("Select Property :", ["Temperature Profile",\
                                                "Luminosity profile (with approximation)",\
                                                "Luminosity profile (without approximation)"], key="run_selectbox")
 
-    if option_selected == "Temprature Profile":
+    if option_selected == "Temperature Profile":
         p+=1
         the_R_vs_T_part(p)
         
