@@ -600,7 +600,7 @@ def the_Frequency_vs_Luminosity_part(p):
 
     if option == "1) the graph of (F vs L)?":
         plot_log_scale(frequencies, luminosities,F12=True,xlabel='log(frequencies)',ylabel='log(luminosities)')
-        st.latex(r'unit of frequency is Hz and unit of luminosity is W m^{-2} Hz^{-1}')
+        st.latex(r'unit \ of \ frequency \ is \ \bold{ Hz} and \ unit \ of \ luminosity \ is \ \bold{W m^{-2} Hz^{-1}}')
 
 
     # To find slopes
