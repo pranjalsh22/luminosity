@@ -200,8 +200,8 @@ def plot_log_scale(x_list, y_list,F12=False, show_points=True, interactive=True,
     plt.figure()
     fig, ax = plt.subplots()
     if F12:
-        plt.plot([F1,F1],[0,10**22],label='F1')
-        plt.plot([F2,F2],[0,10**22],label='F2')
+        plt.plot([F1,F1],[0,10**24],label='F1')
+        plt.plot([F2,F2],[0,10**24],label='F2')
     if show_points:
         plt.scatter(x_list, y_list, marker='.', linestyle='-')
         plt.plot(x_list, y_list, marker='.', linestyle='-')
@@ -634,7 +634,7 @@ def the_Frequency_vs_Luminosity_part2(p):
     global frequencies, luminosities
     p+=1
     #frequencies=sorted([10**n for n in range(1,21)]+[3*10**n for n in range (0,21)]+[7*10**n for n in range (0,21)])
-    frequencies=sorted([10**n for n in range(1,22)]+[3*10**n for n in range (0,21)])
+    frequencies=sorted([10**n for n in range(1,20)]+[3*10**n for n in range (0,19)])
 
     luminosities=np.array([luminosity2(i) for i in frequencies])
     st.latex(r'L_\nu = \frac{16 \pi^2 h \nu^3}{c^2} cosi \int_{r_i}^{r_o}  \frac{r}{e^{\frac{h \nu}{k T(r)}}-1} d r')
