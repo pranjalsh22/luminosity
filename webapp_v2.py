@@ -634,7 +634,7 @@ def the_Frequency_vs_Luminosity_part2(p):
     global frequencies, luminosities
     p+=1
     #frequencies=sorted([10**n for n in range(1,21)]+[3*10**n for n in range (0,21)]+[7*10**n for n in range (0,21)])
-    frequencies=sorted([10**n for n in range(1,18)]+[3*10**n for n in range (0,17)])
+    frequencies=sorted([10**n for n in range(1,22)]+[3*10**n for n in range (0,21)])
 
     luminosities=np.array([luminosity2(i) for i in frequencies])
     st.latex(r'L_\nu = \frac{16 \pi^2 h \nu^3}{c^2} cosi \int_{r_i}^{r_o}  \frac{r}{e^{\frac{h \nu}{k T(r)}}-1} d r')
