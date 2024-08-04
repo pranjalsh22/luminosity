@@ -599,7 +599,7 @@ def the_Frequency_vs_Luminosity_part(p):
     option = st.selectbox("Select:", ["1) the graph of (F vs L)?", "2) the slopes of (F vs L)?","3) the data table of f vs l"], key="{p}frequency_vs_luminosity")
 
     if option == "1) the graph of (F vs L)?":
-        plot_log_scale(frequencies, luminosities,F12=True,xlabel='log(frequencies(Hz))',ylabel='log(luminosities',r'(W m^{-2} Hz^{-1} ))')
+        plot_log_scale(frequencies, luminosities,F12=True,xlabel='log(frequencies)',ylabel='log(luminosities)')
 
     # To find slopes
     if option == "2) the slopes of (F vs L)?":
