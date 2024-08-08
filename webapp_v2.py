@@ -205,24 +205,26 @@ def luminosity2(ff):
     integration=simpsons_one_third_rule(ff2,r_i+r_s,r_o,10000,f)
     lum=A*integration
     return lum
-def plot_log_scale(x_list, y_list, show_points=True, interactive=True,xlabel='x',ylabel='y'):
+def plot_log_scale(x_list, y_list,spectrum=True, show_points=True, interactive=True,xlabel='x',ylabel='y'):
     plt.figure()
     fig, ax = plt.subplots()
-    #to show F1 and F2
-    F12=st.checkbox("show F1 and F2")
-    if F12:
-        plt.plot([F1,F1],[0,10**24],label='F1')
-        plt.plot([F2,F2],[0,10**24],label='F2')
-    #show spectrum lines
-    spctrm=st.checkbox("show spectrum",value=True)
-    if spctrm:
-        plt.fill_between(np.linspace(0,3e9,5),np.linspace(10**24,10**24,5),alpha=0.3,label='radio')
-        plt.fill_between(np.linspace(3e9,3e12,5),np.linspace(10**24,10**24,5),alpha=0.3,label='microwave')
-        plt.fill_between(np.linspace(3e12,2.99e14,5),np.linspace(10**24,10**24,5),alpha=0.3,label='infrared')
-        plt.fill_between(np.linspace(3.01e14,7.5e14,5),np.linspace(10**24,10**24,5),alpha=0.3,label='visible')
-        plt.fill_between(np.linspace(7.5e14,3e16,5),np.linspace(10**24,10**24,5),alpha=0.3,label='UV')
-        plt.fill_between(np.linspace(3e16,3e19,5),np.linspace(10**24,10**24,5),alpha=0.3,label='X-ray')
-        plt.fill_between(np.linspace(3e19,3e30,5),np.linspace(10**24,10**24,5),alpha=0.3,label='Gamma-ray')
+    if spectrum:
+        #to show F1 and F2
+        F12=st.checkbox("show F1 and F2")
+        if F12:
+            plt.plot([F1,F1],[0,10**24],label='F1')
+            plt.plot([F2,F2],[0,10**24],label='F2')
+        
+        #show spectrum lines
+        spctrm=st.checkbox("show spectrum",value=True)
+        if spctrm:
+            plt.fill_between(np.linspace(0,3e9,5),np.linspace(10**24,10**24,5),alpha=0.3,label='radio')
+            plt.fill_between(np.linspace(3e9,3e12,5),np.linspace(10**24,10**24,5),alpha=0.3,label='microwave')
+            plt.fill_between(np.linspace(3e12,2.99e14,5),np.linspace(10**24,10**24,5),alpha=0.3,label='infrared')
+            plt.fill_between(np.linspace(3.01e14,7.5e14,5),np.linspace(10**24,10**24,5),alpha=0.3,label='visible')
+            plt.fill_between(np.linspace(7.5e14,3e16,5),np.linspace(10**24,10**24,5),alpha=0.3,label='UV')
+            plt.fill_between(np.linspace(3e16,3e19,5),np.linspace(10**24,10**24,5),alpha=0.3,label='X-ray')
+            plt.fill_between(np.linspace(3e19,3e30,5),np.linspace(10**24,10**24,5),alpha=0.3,label='Gamma-ray')
 
     if show_points:
         plt.scatter(x_list, y_list, marker='.', linestyle='-')
@@ -232,10 +234,16 @@ def plot_log_scale(x_list, y_list, show_points=True, interactive=True,xlabel='x'
         plt.plot(x_list, y_list)
     plt.xscale('log')
     plt.yscale('log')
-    x1=1e0
-    x2=1e24
-    y1=1e0
-    y2=1e24
+    if spectrum:
+        x1=1e0
+        x2=1e24
+        y1=1e0
+        y2=1e24
+    if spectrum==False:
+        x1=0
+        x2=r_o_rs*10
+        y1=0
+        y2=tmax*10
     set_range=st.checkbox("set x and y range")
     if set_range:
         x1=st.number_input("lower limit of x", format="%e", value=x1)
@@ -456,7 +464,7 @@ st.sidebar.text(\
 
 def the_R_vs_T_part(p):
     p+=1
-    global radii, temperatures
+    global radii, temperatures, tmax
     st.markdown('# Radius-Temperature relationship')
     st.latex(r" T(r)^4 =\left( \frac {3GM_0\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_i}{r}}}{r^3} \right]")
     # Creating list of radii
@@ -502,7 +510,7 @@ def the_R_vs_T_part(p):
 
     # Plotting the graph for radius vs temperature
     elif option == "2) the graph of (R vs T) in logscale":
-        plot_log_scale(radii, temperatures,xlabel="log(radius) (Rs)",ylabel="log(temperature) (K)")
+        plot_log_scale(radii, temperatures,spectrum=False,xlabel="log(radius) (Rs)",ylabel="log(temperature) (K)")
 
     elif option == "3) the graph of (R vs T) without logscale":
         plotit(radii, temperatures,xlabel="Radius (Rs)",ylabel="Temperature  (K)")
