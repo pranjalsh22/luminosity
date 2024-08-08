@@ -1,3 +1,4 @@
+#version6
 import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -423,23 +424,23 @@ r_o = r_o_rs * r_s
 # Calculate mass accretion rate
 
 def m_dotf(eddington_ratio,accretion_efficiency):
-    return (eddington_ratio / accretion_efficiency) * (1.3e31 / c ** 2) * m_bh
-def eddington_ratiof(mdot):
-    
-    return m_dot*accretion_efficiency*(c**2)/(1.3e31*m_bh)
+    return (eddington_ratio/accretion_efficiency) * (1.3e31 / c**2) * m_bh
+
+
 choice=st.sidebar.selectbox('define either ',['accretion rate','eddington ratio and accretion efficiency'])
+
 if choice =='accretion rate':
     mdot = st.sidebar.number_input("Accretion Rate in solar masses per year", format="%f", value=0.22960933114483387)
     m_dot=mdot*m_sun_kg/(31536000)
     
 if choice =='eddington ratio and accretion efficiency':
+    st.sidebar.latex(r"\dot{M} = \frac {\epsilon} {\eta} \frac {1.3 10^{31}}{c^2} M_{BH} \ ,where \ M_{BH} \ is \ in \ solar \ masses")
     eddington_ratio = st.sidebar.number_input("Eddington ratio", value=0.1, format="%f")
     accretion_efficiency = st.sidebar.number_input("Accretion efficiency", value=0.1, format="%f")
     m_dot=m_dotf(eddington_ratio,accretion_efficiency)
 
 #m_dot = eddington_ratio*1.3e31*m_bh_kg/(0.1*(c**2)*m_sun_kg)
 t_disk=(3*G*m_bh_kg*m_dot/(8*pi*sbc*(r_i**3)))**0.25
-#m_dot=0.6998e27
 t_o = temp(r_o_rs)
 t_i = temp(r_i_rs+0.1)
 F1=k*t_o/h
@@ -466,7 +467,7 @@ def the_R_vs_T_part(p):
     p+=1
     global radii, temperatures, tmax
     st.markdown('# Radius-Temperature relationship')
-    st.latex(r" T(r)^4 =\left( \frac {3GM_0\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_i}{r}}}{r^3} \right]")
+    st.latex(r" T(r)^4 =\left( \frac {3GM_{BH}\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_i}{r}}}{r^3} \right]")
     # Creating list of radii
     radii = generate_pattern(r_o_rs)
 
@@ -498,21 +499,21 @@ def the_R_vs_T_part(p):
         st.warning('there is some issue in calculating error')
 
     # Display options for viewing data
-    option = st.selectbox("Select:", ["1) the data table of (R vs T)?",\
-                                       "2) the graph of (R vs T) in logscale",\
-                                     "3) the graph of (R vs T) without logscale"], key='tvrhere2201{p}')  # Unique key
+    option = st.selectbox("Select:", ["graph of (R vs T) in logscale",\
+                                      "data table of (R vs T)?",\
+                                     "graph of (R vs T) without logscale"], key='tvrhere2201{p}')  # Unique key
 
-    if option == "1) the data table of (R vs T)?":
+    if option == "data table of (R vs T)?":
         save_data(dataset)
         if st.button("show data"):
             st.table(dataset)
             
 
     # Plotting the graph for radius vs temperature
-    elif option == "2) the graph of (R vs T) in logscale":
+    elif option == "graph of (R vs T) in logscale":
         plot_log_scale(radii, temperatures,spectrum=False,xlabel="log(radius) (Rs)",ylabel="log(temperature) (K)")
 
-    elif option == "3) the graph of (R vs T) without logscale":
+    elif option == "graph of (R vs T) without logscale":
         plotit(radii, temperatures,xlabel="Radius (Rs)",ylabel="Temperature  (K)")
 
 #---------------------------------------------------------------------------------------------------------
@@ -747,8 +748,9 @@ def run(p):
     p+=1
     st.markdown('# Spectrum of Standard Accretion Disk')
     st.write("<div style='text-align: right;'>by Pranjal</div>", unsafe_allow_html=True)
-    option_selected = st.selectbox("Select Property :", ["Temperature Profile",\
-                                               "Luminosity profile (without approximation)"], key="run_selectbox")
+    option_selected = st.selectbox("Select Property :", ["Luminosity profile (without approximation)",\
+                                                         "Temperature Profile"\
+                                               ], key="run_selectbox")
 
     if option_selected == "Temperature Profile":
         p+=1
