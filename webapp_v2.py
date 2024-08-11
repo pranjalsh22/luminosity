@@ -1,4 +1,4 @@
-#version6
+#version7
 import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -12,6 +12,7 @@ warnings.filterwarnings("ignore")
 #COPY PASTING FORMULAS
 
 #constants
+global G,m_sun_kg, c, sbc,pi, h,k 
 G=6.67430e-11 #'''Nm2/kg2'''
 m_sun_kg = 1.988e30 #'''kg'''#defined again in functioning
 c=299792458 #'''m/s'''
@@ -206,10 +207,11 @@ def luminosity2(ff):
     integration=simpsons_one_third_rule(ff2,r_i+r_s,r_o,10000,f)
     lum=A*integration
     return lum
-def plot_log_scale(x_list, y_list,spectrum=True, show_points=True, interactive=True,xlabel='x',ylabel='y'):
+def plot_log_scale(x_list, y_list,temperature=False,spectrumv=False,spectrume=False, show_points=True, interactive=True,xlabel='x',ylabel='y'):
     plt.figure()
     fig, ax = plt.subplots()
-    if spectrum:
+    p=1
+    if spectrumv:
         #to show F1 and F2
         F12=st.checkbox("show F1 and F2")
         if F12:
@@ -217,7 +219,7 @@ def plot_log_scale(x_list, y_list,spectrum=True, show_points=True, interactive=T
             plt.plot([F2,F2],[0,10**24],label='F2')
         
         #show spectrum lines
-        spctrm=st.checkbox("show spectrum",value=True)
+        spctrm=st.checkbox("show EM spectrum Range",value=True)
         if spctrm:
             plt.fill_between(np.linspace(0,3e9,5),np.linspace(10**24,10**24,5),alpha=0.3,label='radio')
             plt.fill_between(np.linspace(3e9,3e12,5),np.linspace(10**24,10**24,5),alpha=0.3,label='microwave')
@@ -226,7 +228,27 @@ def plot_log_scale(x_list, y_list,spectrum=True, show_points=True, interactive=T
             plt.fill_between(np.linspace(7.5e14,3e16,5),np.linspace(10**24,10**24,5),alpha=0.3,label='UV')
             plt.fill_between(np.linspace(3e16,3e19,5),np.linspace(10**24,10**24,5),alpha=0.3,label='X-ray')
             plt.fill_between(np.linspace(3e19,3e30,5),np.linspace(10**24,10**24,5),alpha=0.3,label='Gamma-ray')
-
+    if spectrume:
+        p+=1
+        #to show F1 and F2
+        F12=st.checkbox("show F1 and F2",key=p)
+        if F12:
+            plt.plot([h*F1,h*F1],[0,10**24],label='F1')
+            plt.plot([h*F2,h*F2],[0,10**24],label='F2')
+        
+        #show spectrum lines
+        spctrm=st.checkbox("show EM spectrum Range",value=True,key=p+1)
+        if spctrm:
+            
+            h1=h/(1.60217663e-19*1e+3)
+            plt.fill_between(np.linspace(0,h1*3e9,5),np.linspace(10**51,10**51,5),alpha=0.3,label='radio')
+            plt.fill_between(np.linspace(h1*3e9,h1*3e12,5),np.linspace(10**51,10**51,5),alpha=0.3,label='microwave')
+            plt.fill_between(np.linspace(h1*3e12,h1*2.99e14,5),np.linspace(10**51,10**51,5),alpha=0.3,label='infrared')
+            plt.fill_between(np.linspace(h1*3.01e14,h1*7.5e14,5),np.linspace(10**51,10**51,5),alpha=0.3,label='visible')
+            plt.fill_between(np.linspace(h1*7.5e14,h1*3e16,5),np.linspace(10**51,10**51,5),alpha=0.3,label='UV')
+            plt.fill_between(np.linspace(h1*3e16,h1*3e19,5),np.linspace(10**51,10**51,5),alpha=0.3,label='X-ray')
+            plt.fill_between(np.linspace(h1*3e19,h1*3e30,5),np.linspace(10**51,10**51,5),alpha=0.3,label='Gamma-ray')
+  
     if show_points:
         plt.scatter(x_list, y_list, marker='.', linestyle='-')
         plt.plot(x_list, y_list, marker='.', linestyle='-')
@@ -235,24 +257,42 @@ def plot_log_scale(x_list, y_list,spectrum=True, show_points=True, interactive=T
         plt.plot(x_list, y_list)
     plt.xscale('log')
     plt.yscale('log')
-    if spectrum:
+    grid=st.checkbox('see grid', key=p+7)
+    if grid:
+        plt.grid()
+    if spectrumv:
         x1=1e0
         x2=1e24
         y1=1e0
         y2=1e24
-    if spectrum==False:
+        plt.xlim(x1,x2)
+        plt.ylim(y1,y2)
+
+    if spectrume:
+        x1=h*1e0/(1.60217663e-19*1e3)
+        x2=h*1e24/(1.60217663e-19*1e3)
+        y1=1e-4
+        y2=1e50
+        plt.xlim(x1,x2)
+        plt.ylim(y1,y2)
+
+    if temperature==True:
         x1=0
         x2=r_o_rs*10
         y1=0
         y2=tmax*10
-    set_range=st.checkbox("set x and y range")
+        plt.xlim(x1,x2)
+        plt.ylim(y1,y2)
+
+    p+=4
+    set_range=st.checkbox("set x and y range",key=p+1)
     if set_range:
         x1=st.number_input("lower limit of x", format="%e", value=x1)
         x2=st.number_input("upper limit of x", format="%e", value=x2)
         y1=st.number_input("lower limit of y", format="%e", value=y1)
         y2=st.number_input("upper limit of y", format="%e", value=y2)
-    plt.xlim(x1,x2)
-    plt.ylim(y1,y2)
+        plt.xlim(x1,x2)
+        plt.ylim(y1,y2)
     # Add title and labels
     if xlabel=='x' or ylabel=='y':
         xlabel=name(x_values)
@@ -394,11 +434,11 @@ def generate_pattern(n):
             continue
     return result
 def savethegraph():
-    name=st.text_input('enter file name')
-    if st.button('save'):
-        plt.savefig(name)
-        st.write(f'Graph saved as {name}')
-
+    return
+    #name=st.text_input('enter file name')
+    #if st.button('save'):
+     #   plt.savefig(name)
+      #  st.write(f'Graph saved as {name}')
 def flux_density_nu(nu, T):
     numerator = 2 * h * nu**3 / c**2
     denominator = np.exp(h * nu / (k * T)) - 1
@@ -434,9 +474,9 @@ if choice =='accretion rate':
     m_dot=mdot*m_sun_kg/(31536000)
     
 if choice =='eddington ratio and accretion efficiency':
-    st.sidebar.latex(r"\dot{M} = \frac {\epsilon} {\eta} \frac {1.3 10^{31}}{c^2} M_{BH} \ ,where \ M_{BH} \ is \ in \ solar \ masses")
-    eddington_ratio = st.sidebar.number_input("Eddington ratio", value=0.1, format="%f")
-    accretion_efficiency = st.sidebar.number_input("Accretion efficiency", value=0.1, format="%f")
+    st.sidebar.latex(r"\dot{M} = \frac {\epsilon} {\zeta} \frac {1.3 10^{31}}{c^2} M_{BH} \ ,where \ M_{BH} \ is \ in \ solar \ masses")
+    eddington_ratio = st.sidebar.number_input(r"Eddington ratio ($\epsilon$)", value=0.1, format="%f")
+    accretion_efficiency = st.sidebar.number_input("Accretion efficiency ($\zeta$)", value=0.1, format="%f")
     m_dot=m_dotf(eddington_ratio,accretion_efficiency)
 
 #m_dot = eddington_ratio*1.3e31*m_bh_kg/(0.1*(c**2)*m_sun_kg)
@@ -467,7 +507,7 @@ def the_R_vs_T_part(p):
     p+=1
     global radii, temperatures, tmax
     st.markdown('# Radius-Temperature relationship')
-    st.latex(r" T(r)^4 =\left( \frac {3GM_{BH}\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_i}{r}}}{r^3} \right]")
+    st.latex(r"where, T(r)^4 =\left( \frac {3GM_{BH}\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_i}{r}}}{r^3} \right]")
     # Creating list of radii
     radii = generate_pattern(r_o_rs)
 
@@ -511,7 +551,7 @@ def the_R_vs_T_part(p):
 
     # Plotting the graph for radius vs temperature
     elif option == "graph of (R vs T) in logscale":
-        plot_log_scale(radii, temperatures,spectrum=False,xlabel="log(radius) (Rs)",ylabel="log(temperature) (K)")
+        plot_log_scale(radii, temperatures,temperature=True,xlabel="log(radius) (Rs)",ylabel="log(temperature) (K)")
 
     elif option == "graph of (R vs T) without logscale":
         plotit(radii, temperatures,xlabel="Radius (Rs)",ylabel="Temperature  (K)")
@@ -676,12 +716,23 @@ def the_Frequency_vs_Luminosity_part2(p):
     #frequencies=sorted([10**n for n in range(1,21)]+[3*10**n for n in range (0,21)]+[7*10**n for n in range (0,21)])
     frequencies=sorted([10**n for n in range(1,23)]+[3*10**n for n in range (0,22)])
 
-    luminosities=np.array([luminosity2(i) for i in frequencies])
+    #luminosities=np.array([luminosity2(i) for i in frequencies])
+    luminosities=[]
+    for i in frequencies:
+        Lnew=luminosity2(i)
+        if Lnew!=np.inf:
+            luminosities.append(Lnew)
+        else:
+            luminosities.append(0)
+        
+        
     st.latex(r'L_\nu = \frac{16 \pi^2 h \nu^3}{c^2} cosi \int_{r_i}^{r_o}  \frac{r}{e^{\frac{h \nu}{k T(r)}}-1} d r')
-    st.latex(r" T(r)^4 =\left( \frac {3GM_0\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_i}{r}}}{r^3} \right]")
+    st.latex(r"where, \ T(r)^4 =\left( \frac {3GM_0\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_i}{r}}}{r^3} \right]")
 
     L=integrate_curve(frequencies,luminosities,a=1e10,b=1e15) 
 
+    energies=[h*v/(1.60217663e-19*1e3) for v in frequencies]
+    EL=[e*v for e,v in zip(luminosities,frequencies)]    
     st.info(f"Net Luminosity is {L}")
     
     
@@ -689,10 +740,34 @@ def the_Frequency_vs_Luminosity_part2(p):
     dataset=pd.DataFrame({"frequency":frequencies,"Luminosity":luminosities})    
     option = st.selectbox("Select:", ["1) the graph of (F vs L)?", "2) the slopes of (F vs L)?","3) the data table of f vs l"], key="{p}frequency_vs_luminosity")
 
-    if option == "1) the graph of (F vs L)?":
-        plot_log_scale(frequencies, luminosities,xlabel='log(frequencies)',ylabel='log(luminosities)')
-        st.latex(r'Unit \ of \ \underline{frequency} \ is \ \bold{ Hz} \ and \ unit \ of \ \underline{luminosity} \ is \ \bold{W m^{-2} Hz^{-1}}')
+    # Finding maximum and minimum temperatures
+    try:
+        lmax = max(luminosities)
+        
+    except:
+        lmin, lmax = 'undetermined', 'undetermined'
+    try:     
+       # Finding r at maximum temperature
+        f_lmax = dataset.loc[dataset['Luminosity'] == lmax, 'frequency'].values[0]
+        #display maximum temprature
+    except:
+        st.warning('there is some issue in calculating error')
 
+
+    if option == "1) the graph of (F vs L)?":
+        st.latex(r'\LARGE{\underline{\bold{L_\nu \ vs \  \nu}}}')
+
+        plot_log_scale(frequencies, luminosities,spectrumv=True,xlabel=r'$log(\nu) \ in \ Hz$',ylabel=r'$log(L_{\nu}) \ in \ W m^{-2} Hz^{-1}$')
+        st.info(f'Max $ L_v $ = {lmax:e} watt/m^2Hz observed in {spectrum_category(f_lmax)} region ($ v $ = {f_lmax:.1e} Hz).')
+
+        st.markdown('''<hr style="
+                border: 0;
+                border-top: 3px double white;
+                background: white;
+                margin: 20px 0;" />''', unsafe_allow_html=True)
+
+        st.latex(r'\LARGE{\underline{\bold{EL_E \ vs \ E}}}')
+        plot_log_scale(energies, EL,spectrume=True, xlabel='log(E) in KeV',ylabel=r'$log(EL_E) \ in \ W m^{-2}$')
     # To find slopes
     if option == "2) the slopes of (F vs L)?":
         log_frequencies =[ np.log10(float(f)) for f in frequencies]
@@ -727,22 +802,7 @@ def the_Frequency_vs_Luminosity_part2(p):
 
             # Display the data table
             st.table(d_scientific)
-    st.info(f'Peak energy  {h*F2/(1.60217663e-19*1e-3)}  KeV')
-    # Finding maximum and minimum temperatures
-    try:
-        lmax = max(luminosities)
-        
-    except:
-        lmin, lmax = 'undetermined', 'undetermined'
-    try:     
-       # Finding r at maximum temperature
-        f_lmax = dataset.loc[dataset['Luminosity'] == lmax, 'frequency'].values[0]
-        #display maximum temprature
-        st.info(f'The maximum luminosity = {lmax:e} watt/m^2Hz observed at frequency {f_lmax:e} Hz.')
-    except:
-        st.warning('there is some issue in calculating error')
-    st.info(f"{f_lmax:e} Hz lies in {spectrum_category(f_lmax)} ")
-
+    
 #---------------------------------------------------------------------------------------------------------        
 def run(p):
     p+=1
@@ -783,3 +843,10 @@ extra_work = st.checkbox("see extra work done")
 if extra_work:
     p=1
     extrawork(p)
+st.write(f'save option available when run locally under function savethegraph() line426')
+updt=st.checkbox("Update details")
+if updt:
+    st.write(f'\
+version 7: added EL_E vs E graph and grid option :s \
+version 6: removed extra work and added spectrum range colours :s\
+        ')
