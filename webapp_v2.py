@@ -1,4 +1,4 @@
-#version7
+#version8
 import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -207,7 +207,7 @@ def luminosity2(ff):
     integration=simpsons_one_third_rule(ff2,r_i+r_s,r_o,10000,f)
     lum=A*integration
     return lum
-def plot_log_scale(x_list, y_list,temperature=False,spectrumv=False,spectrume=False, show_points=True, interactive=True,xlabel='x',ylabel='y'):
+def plot_log_scale(x_list, y_list,temperature=False,spectrumv=False,spectrumf=False,spectrume=False, show_points=True, interactive=True,xlabel='x',ylabel='y'):
     plt.figure()
     fig, ax = plt.subplots()
     p=1
@@ -228,13 +228,11 @@ def plot_log_scale(x_list, y_list,temperature=False,spectrumv=False,spectrume=Fa
             plt.fill_between(np.linspace(7.5e14,3e16,5),np.linspace(10**24,10**24,5),alpha=0.3,label='UV')
             plt.fill_between(np.linspace(3e16,3e19,5),np.linspace(10**24,10**24,5),alpha=0.3,label='X-ray')
             plt.fill_between(np.linspace(3e19,3e30,5),np.linspace(10**24,10**24,5),alpha=0.3,label='Gamma-ray')
-    if spectrume:
-        p+=1
-        #to show F1 and F2
-        F12=st.checkbox("show F1 and F2",key=p)
-        if F12:
-            plt.plot([h*F1,h*F1],[0,10**24],label='F1')
-            plt.plot([h*F2,h*F2],[0,10**24],label='F2')
+    if spectrume or spectrumf:
+        if spectrume:
+            p=55
+        if spectrumf:
+            p=45
         
         #show spectrum lines
         spctrm=st.checkbox("show EM spectrum Range",value=True,key=p+1)
@@ -243,8 +241,8 @@ def plot_log_scale(x_list, y_list,temperature=False,spectrumv=False,spectrume=Fa
             h1=h/(1.60217663e-19*1e+3)
             plt.fill_between(np.linspace(0,h1*3e9,5),np.linspace(10**51,10**51,5),alpha=0.3,label='radio')
             plt.fill_between(np.linspace(h1*3e9,h1*3e12,5),np.linspace(10**51,10**51,5),alpha=0.3,label='microwave')
-            plt.fill_between(np.linspace(h1*3e12,h1*2.99e14,5),np.linspace(10**51,10**51,5),alpha=0.3,label='infrared')
-            plt.fill_between(np.linspace(h1*3.01e14,h1*7.5e14,5),np.linspace(10**51,10**51,5),alpha=0.3,label='visible')
+            plt.fill_between(np.linspace(h1*3e12,h1*2.9999e14,5),np.linspace(10**51,10**51,5),alpha=0.3,label='infrared')
+            plt.fill_between(np.linspace(h1*3.0001e14,h1*7.5e14,5),np.linspace(10**51,10**51,5),alpha=0.3,label='visible')
             plt.fill_between(np.linspace(h1*7.5e14,h1*3e16,5),np.linspace(10**51,10**51,5),alpha=0.3,label='UV')
             plt.fill_between(np.linspace(h1*3e16,h1*3e19,5),np.linspace(10**51,10**51,5),alpha=0.3,label='X-ray')
             plt.fill_between(np.linspace(h1*3e19,h1*3e30,5),np.linspace(10**51,10**51,5),alpha=0.3,label='Gamma-ray')
@@ -273,6 +271,13 @@ def plot_log_scale(x_list, y_list,temperature=False,spectrumv=False,spectrume=Fa
         x2=h*1e24/(1.60217663e-19*1e3)
         y1=1e-4
         y2=1e50
+        plt.xlim(x1,x2)
+        plt.ylim(y1,y2)
+    if spectrumf:
+        x1=1e-20
+        x2=1e13
+        y1=1e-40
+        y2=1e2
         plt.xlim(x1,x2)
         plt.ylim(y1,y2)
 
@@ -755,19 +760,46 @@ def the_Frequency_vs_Luminosity_part2(p):
 
 
     if option == "1) the graph of (F vs L)?":
-        st.latex(r'\LARGE{\underline{\bold{L_\nu \ vs \  \nu}}}')
+        
+        op1=st.checkbox(r'$ L_{\nu} \ vs \ \nu $',value=True)
+        op2=st.checkbox(r'$ EL_{E} \ vs \ E $',value=True)
+        op3=st.checkbox(r'$ EF_{E} \ vs \ E $',value=False)
 
-        plot_log_scale(frequencies, luminosities,spectrumv=True,xlabel=r'$log(\nu) \ in \ Hz$',ylabel=r'$log(L_{\nu}) \ in \ W m^{-2} Hz^{-1}$')
-        st.info(f'Max $ L_v $ = {lmax:e} watt/m^2Hz observed in {spectrum_category(f_lmax)} region ($ v $ = {f_lmax:.1e} Hz).')
+        if op1==True:
+            st.latex(r'\LARGE{\underline{\bold{L_\nu \ vs \  \nu}}}')
+            plot_log_scale(frequencies, luminosities,spectrumv=True,xlabel=r'$log(\nu) \ in \ Hz$',ylabel=r'$log(L_{\nu}) \ in \ W Hz^{-1}$')
+            st.info(f'Max $ L_v $ = {lmax:e} watt/m^2Hz observed in {spectrum_category(f_lmax)} region ($ v $ = {f_lmax:.1e} Hz).')
 
-        st.markdown('''<hr style="
-                border: 0;
-                border-top: 3px double white;
-                background: white;
-                margin: 20px 0;" />''', unsafe_allow_html=True)
-
-        st.latex(r'\LARGE{\underline{\bold{EL_E \ vs \ E}}}')
-        plot_log_scale(energies, EL,spectrume=True, xlabel='log(E) in KeV',ylabel=r'$log(EL_E) \ in \ W m^{-2}$')
+            st.markdown('''<hr style="
+                    border: 0;
+                    border-top: 3px double white;
+                    background: white;
+                    margin: 20px 0;" />''', unsafe_allow_html=True)
+        if op2==True:
+            st.latex(r'\LARGE{\underline{\bold{EL_E \ vs \ E}}}')
+            plot_log_scale(energies, EL,spectrume=True, xlabel='log(E) in KeV',ylabel=r'$log(EL_E) \ in \ W $')
+            st.markdown('''<hr style="
+                    border: 0;
+                    border-top: 3px double white;
+                    background: white;
+                    margin: 20px 0;" />''', unsafe_allow_html=True)
+        if op3==True:
+            st.latex(r"F_E =\frac {L_E}{4 \pi d^2} \ where \ d \ is \ in \ meters")
+            dpsc=st.number_input('enter distance from source in parsecs',value=2.22e3,format='%e')
+            d=dpsc*3.0856776e16
+            cgs=st.checkbox('cgs unit',value=True)
+            EFE=[i/(4*pi*d**2) for i in EL]
+            if cgs:
+                EFE_cgs=[i*1e3 for i in EFE]
+                plot_log_scale(energies, EFE_cgs,spectrumf=True, xlabel='log(E) in KeV',ylabel=r'$log(EF_E) \ in \ erg \ s^{-1} \ cm^{-2} $')
+            if cgs==False:
+                plot_log_scale(energies, EFE,spectrumf=True, xlabel='log(E) in KeV',ylabel=r'$log(EF_E) \ in \ J \ s^{-1} \ m^{-2} $')
+            st.markdown('''<hr style="
+                    border: 0;
+                    border-top: 3px double white;
+                    background: white;
+                    margin: 20px 0;" />''', unsafe_allow_html=True)
+        
     # To find slopes
     if option == "2) the slopes of (F vs L)?":
         log_frequencies =[ np.log10(float(f)) for f in frequencies]
@@ -847,6 +879,7 @@ st.write(f'save option available when run locally under function savethegraph() 
 updt=st.checkbox("Update details")
 if updt:
     st.write(f'\
-version 7: added EL_E vs E graph and grid option :s \
+version 8: added EF_E vs E graph by taking input of d and cgs option in EFE :s \
+version 7: added EL_E vs E graph and scaling + grid option :s \
 version 6: removed extra work and added spectrum range colours :s\
         ')
