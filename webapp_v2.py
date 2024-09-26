@@ -839,7 +839,6 @@ def the_Frequency_vs_Luminosity_part2(p):
 def run(p):
     p+=1
     st.markdown('# Spectrum of Standard Accretion Disk')
-    st.write("<div style='text-align: right;'>by Pranjal</div>", unsafe_allow_html=True)
     option_selected = st.selectbox("Select Property :", ["Luminosity profile (without approximation)",\
                                                          "Temperature Profile"\
                                                ], key="run_selectbox")
@@ -877,6 +876,12 @@ if extra_work:
     extrawork(p)
 st.write(f'save option available when run locally under function savethegraph() line426')
 updt=st.checkbox("Update details")
+st.markdown("""
+<div style='text-align: right;'>
+    <p><strong>By Pranjal Sharma</strong></p>
+    <p><strong>under guidance of Dr. C. Konar</strong></p>
+</div>
+""", unsafe_allow_html=True)
 if updt:
     st.write(f'\
 version 8: added EF_E vs E graph by taking input of d and cgs option in EFE :s \
