@@ -825,12 +825,11 @@ def the_Frequency_vs_Luminosity_part2(p):
             st.table(d_scientific)    #to see data
     if option =="3) the data table of f vs l":
         data={"frequencies":frequencies,"luminosities":luminosities}
-        if st.button("show data"):
-            dataset=pd.DataFrame(data)
-            for column in dataset.columns:
-                dataset[column] = dataset[column].apply(lambda x: '{:.2e}'.format(x))
+        dataset=pd.DataFrame(data)
+        for column in dataset.columns:
+            dataset[column] = dataset[column].apply(lambda x: '{:.2e}'.format(x))
             
-            st.dataframe(dataset, use_container_width=True)
+        st.dataframe(dataset, use_container_width=True)
             
 
     
