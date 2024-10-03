@@ -824,16 +824,15 @@ def the_Frequency_vs_Luminosity_part2(p):
             d_scientific = {key: [format_str.format(float(value)) for value in values] for key, values in dataset.items()}
             st.table(d_scientific)    #to see data
     if option =="3) the data table of f vs l":
-        d={"frequencies":frequencies,"luminosities":luminosities}
-        save_data(d)
+        data={"frequencies":frequencies,"luminosities":luminosities}
         if st.button("show data"):
-            format_str = '{:.2e}'  # Change the precision (2) as needed
+            dataset=pd.DataFrame(data)
+            for column in dataset.columns:
+                dataset[column] = dataset[column].apply(lambda x: '{:.2e}'.format(x))
+            
+            st.dataframe(dataset, use_container_width=True)
+            
 
-            # Convert the data to scientific notation
-            d_scientific = {key: [format_str.format(value) for value in values] for key, values in d.items()}
-
-            # Display the data table
-            st.table(d_scientific)
     
 #---------------------------------------------------------------------------------------------------------        
 def run(p):
