@@ -205,7 +205,7 @@ def luminosity2(ff):
     f=ff
     A=16*(pi**2)*h*f**3/c**2
     integration=simpsons_one_third_rule(ff2,r_i+r_s,r_o,10000,f)
-    lum=A*integration
+    lum=cos_i*A*integration
     return lum
 def plot_log_scale(x_list, y_list,temperature=False,spectrumv=False,spectrumf=False,spectrume=False, show_points=True, interactive=True,xlabel='x',ylabel='y'):
     plt.figure()
@@ -465,7 +465,6 @@ r_i = r_i_rs * r_s
 # Input for r_o in units of r_s
 r_o_rs = st.sidebar.number_input("Value of r_o in units of Schwarzschild radius (r_s)", value=1e5,format='%e')
 r_o = r_o_rs * r_s
-
 # Calculate mass accretion rate
 
 def m_dotf(eddington_ratio,accretion_efficiency):
@@ -484,6 +483,8 @@ if choice =='eddington ratio and accretion efficiency':
     accretion_efficiency = st.sidebar.number_input("Accretion efficiency ($\zeta$)", value=0.1, format="%f")
     m_dot=m_dotf(eddington_ratio,accretion_efficiency)
 
+angle_inclination = st.sidebar.number_input("Angle of inclination in degrees", value=0,format='%e')
+cos_i=np.cos(angle_inclination*57.2958)
 #m_dot = eddington_ratio*1.3e31*m_bh_kg/(0.1*(c**2)*m_sun_kg)
 t_disk=(3*G*m_bh_kg*m_dot/(8*pi*sbc*(r_i**3)))**0.25
 t_o = temp(r_o_rs)
@@ -825,14 +826,13 @@ def the_Frequency_vs_Luminosity_part2(p):
             st.table(d_scientific)    #to see data
     if option =="3) the data table of f vs l":
         data={"frequencies":frequencies,"luminosities":luminosities}
+        
         dataset=pd.DataFrame(data)
         for column in dataset.columns:
             dataset[column] = dataset[column].apply(lambda x: '{:.2e}'.format(x))
             
         st.dataframe(dataset, use_container_width=True)
             
-
-    
 #---------------------------------------------------------------------------------------------------------        
 def run(p):
     p+=1
@@ -882,7 +882,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 if updt:
     st.write(f'\
-version 8: added EF_E vs E graph by taking input of d and cgs option in EFE :s \
+version 8: added EF_E vs E graph by taking input of d and cgs option in EFE + angle of inclination :s \
 version 7: added EL_E vs E graph and scaling + grid option :s \
 version 6: removed extra work and added spectrum range colours :s\
         ')
