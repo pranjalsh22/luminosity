@@ -501,7 +501,7 @@ st.sidebar.text(\
     f"r_o = {r_o} m\n"
     f"t_i = {t_i} K\n"
     f"t_o = {t_o} K\n"
-    f" cos(i) = {cos_i} \n"
+    f"cos(i) = {cos_i} \n"
     f"F1={F1:e} Hz\n"
     f"F2={F2:e} Hz \n"
     f"F2/F1={F2/F1:e}")
