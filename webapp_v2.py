@@ -484,7 +484,7 @@ if choice =='eddington ratio and accretion efficiency':
     m_dot=m_dotf(eddington_ratio,accretion_efficiency)
 
 angle_inclination = st.sidebar.number_input("Angle of inclination in degrees", value=0,format='%e')
-cos_i=np.cos(angle_inclination*57.2958)
+cos_i=np.cos(angle_inclination)
 #m_dot = eddington_ratio*1.3e31*m_bh_kg/(0.1*(c**2)*m_sun_kg)
 t_disk=(3*G*m_bh_kg*m_dot/(8*pi*sbc*(r_i**3)))**0.25
 t_o = temp(r_o_rs)
