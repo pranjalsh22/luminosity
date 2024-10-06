@@ -1,4 +1,4 @@
-#version8
+#version9
 import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -882,7 +882,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 if updt:
     st.write(f'\
-version 8: added EF_E vs E graph by taking input of d and cgs option in EFE + angle of inclination :s \
+version 9: added angle of inclination :s \
+version 8: added EF_E vs E graph by taking input of d and cgs option in EFE :s \
 version 7: added EL_E vs E graph and scaling + grid option :s \
 version 6: removed extra work and added spectrum range colours :s\
         ')
