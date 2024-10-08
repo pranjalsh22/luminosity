@@ -1,4 +1,4 @@
-#version9
+#version1
 import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -157,17 +157,17 @@ def plot_log_scale(x_list, y_list,temperature=False,spectrumv=False,spectrumf=Fa
         plt.grid()
     if spectrumv:
         x1=1e0
-        x2=1e24
-        y1=1e0
-        y2=1e24
+        x2=1e21
+        y1=1e-10
+        y2=1e15
         plt.xlim(x1,x2)
         plt.ylim(y1,y2)
 
     if spectrume:
         x1=h*1e0/(1.60217663e-19*1e3)
         x2=h*1e24/(1.60217663e-19*1e3)
-        y1=1e-4
-        y2=1e50
+        y1=1e-10
+        y2=1e20
         plt.xlim(x1,x2)
         plt.ylim(y1,y2)
     if spectrumf:
@@ -352,7 +352,7 @@ def the_R_vs_T_part(p):
     p+=1
     global radii, temperatures, tmax
     st.markdown('# Radius-Temperature relationship')
-    st.latex(r"where, T_c = 1.4 \times 10^4  \alpha^{-1/5} \dot{M}^{3/10}_{16} M_1^{5/8} R_10^{3/4} f^{6/5} K") 
+    st.latex(r"where, T_c = 6.968 \times 10^-4  \alpha^{-1/5} \dot{M}^{3/10} M_{BH}^{1/4} R^{-3/4} f^{6/5} K") 
 
     # Creating list of radii
     radii = generate_pattern(r_o_rs)
@@ -422,7 +422,7 @@ def the_Frequency_vs_Luminosity_part2(p):
         
         
     st.latex(r'L_\nu = \frac{16 \pi^2 h \nu^3}{c^2} cosi \int_{r_i}^{r_o}  \frac{r}{e^{\frac{h \nu}{k T(r)}}-1} d r')
-    st.latex(r"where, \ T(r)^4 =\left( \frac {3GM_0\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_i}{r}}}{r^3} \right]")
+    st.latex(r"where, T_c = 6.968 \times 10^-4  \alpha^{-1/5} \dot{M}^{3/10} M_{BH}^{1/4} R^{-3/4} f^{6/5} K") 
 
     L=integrate_curve(frequencies,luminosities,a=1e10,b=1e15) 
 
