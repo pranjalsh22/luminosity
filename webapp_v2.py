@@ -1,4 +1,4 @@
-#version9
+#version10
 import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -41,7 +41,17 @@ def integrate_curve(x, y,a=1,b=1):
             integral +=  (np.float128(dy)*np.float128(dx))#*(a*b)
     print(f'print integral is {integral}')
     return integral
+def snip_data(x, y, y1, y2):
+    # Convert lists to numpy arrays for easier manipulation
+    x = np.array(x)
+    y = np.array(y)
 
+    mask = (y >= y1) & (y <= y2)
+
+    x_snipped = x[mask]
+    y_snipped = y[mask]
+
+    return x_snipped, y_snipped
 def path_of_file(file_name):
     abs_path = os.path.abspath(file_name)
     st.write('file is saved  at: ',abs_path)
@@ -670,7 +680,10 @@ def the_Frequency_vs_Luminosity_part(p):
     st.latex(r'L_\nu = \frac{64 \pi^2 r_i^2 (k T_i)^{8/3}}{3 c^2 h^{5/3}} \nu^{\frac{1}{3}}cosi \int_{x_i}^{x_o}  \frac{x^{5/3}}{e^{x}-1} d x')
     st.latex(r'where,\ \ x(r)=\frac{h \nu}{k T(r)} ')
 
-    L=integrate_curve(frequencies,luminosities,a=1e10,b=1e15) 
+    L=integrate_curve(frequencies,luminosities,a=1e10,b=1e15)
+
+    
+
     st.info(f"net Luminosity is {L} ")
     # Storing values of r and t together in R_vs_T
     dataset=pd.DataFrame({"frequency":frequencies,"Luminosity":luminosities})
@@ -745,10 +758,18 @@ def the_Frequency_vs_Luminosity_part2(p):
     st.latex(r"where, \ T(r)^4 =\left( \frac {3GM_0\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_i}{r}}}{r^3} \right]")
 
     L=integrate_curve(frequencies,luminosities,a=1e10,b=1e15) 
+    st.info(f"Net Luminosity is {L}")
+    
+    #snipped net luminosity
+    y1=3e12 #where IR bgins 
+    y2=3e16 #where UV ends
+    frequencies_snipped,luminosities_snipped = snip_data(frequencies, luminosities, y1, y2)
+    L_snipped = integrate_curve(frequencies_snipped,luminosities_snipped,a=1e10,b=1e15)
+    st.info(f"Net Luminosity from IR(3e12) to UV(3e16)  is {L_snipped}")
+
 
     energies=[h*v/(1.60217663e-19*1e3) for v in frequencies]
     EL=[e*v for e,v in zip(luminosities,frequencies)]    
-    st.info(f"Net Luminosity is {L}")
     
     
     # Storing values of r and t together in R_vs_T
@@ -894,6 +915,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 if updt:
     st.write(f'\
+version 10: added snipped luminosity :s \ 
 version 9: added angle of inclination :s \
 version 8: added EF_E vs E graph by taking input of d and cgs option in EFE :s \
 version 7: added EL_E vs E graph and scaling + grid option :s \
