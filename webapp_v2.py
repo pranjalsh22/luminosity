@@ -914,10 +914,10 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 if updt:
-    st.write( " \
-version 10: added snipped luminosity :s \ 
-version 9: added angle of inclination :s \
-version 8: added EF_E vs E graph by taking input of d and cgs option in EFE :s \
-version 7: added EL_E vs E graph and scaling + grid option :s \
-version 6: removed extra work and added spectrum range colours " 
-)
+    st.write("""
+    version 10: added snipped luminosity :s
+    version 9: added angle of inclination :s
+    version 8: added EF_E vs E graph by taking input of d and cgs option in EFE :s
+    version 7: added EL_E vs E graph and scaling + grid option :s
+    version 6: removed extra work and added spectrum range colours
+    """)
