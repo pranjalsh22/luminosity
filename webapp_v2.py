@@ -259,6 +259,7 @@ def plot_log_scale(x_list, y_list,temperature=False,spectrumv=False,spectrumf=Fa
     if grid:
         plt.grid()
     if spectrumv:
+        
         x1=1e0
         x2=1e24
         y1=1e0
@@ -762,10 +763,11 @@ def the_Frequency_vs_Luminosity_part2(p):
 
 
     if option == "1) the graph of (F vs L)?":
-        
-        op1=st.checkbox(r'$ L_{\nu} \ vs \ \nu $',value=True)
-        op2=st.checkbox(r'$ EL_{E} \ vs \ E $',value=True)
-        op3=st.checkbox(r'$ EF_{E} \ vs \ E $',value=False)
+        opts=st.checkbox('Graph options',value=False)
+        if opts:
+            op1=st.checkbox(r'$ L_{\nu} \ vs \ \nu $',value=True)
+            op2=st.checkbox(r'$ EL_{E} \ vs \ E $',value=True)
+            op3=st.checkbox(r'$ EF_{E} \ vs \ E $',value=False)
 
         if op1==True:
             st.latex(r'\LARGE{\underline{\bold{L_\nu \ vs \  \nu}}}')
@@ -838,7 +840,7 @@ def the_Frequency_vs_Luminosity_part2(p):
 def run(p):
     p+=1
     st.markdown('# Spectrum of Standard Accretion Disk')
-    option_selected = st.selectbox("Select Property :", ["Luminosity profile (without approximation)",\
+    option_selected = st.selectbox("Select Property :", ["Luminosity profile",\
                                                          "Temperature Profile"\
                                                ], key="run_selectbox")
 
@@ -847,7 +849,7 @@ def run(p):
         the_R_vs_T_part(p)
         
     
-    elif option_selected == "Luminosity profile (without approximation)":
+    elif option_selected == "Luminosity profile":
         p+=1
         the_Frequency_vs_Luminosity_part2(p)
     
