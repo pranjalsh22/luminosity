@@ -744,9 +744,11 @@ def the_Frequency_vs_Luminosity_part2(p):
     #frequencies=sorted([10**n for n in range(1,21)]+[3*10**n for n in range (0,21)]+[7*10**n for n in range (0,21)])
     frequencies=sorted([10**n for n in range(1,23)]+ \
                        [2*10**n for n in range (0,22)]+ \
-                       [4*10**n for n in range (0,22)]+ \
-                       [6*10**n for n in range (0,22)]+ \
-                       [8*10**n for n in range (0,22)])
+                       [4*10**n for n in range (10,22)]+ \
+                       [6*10**n for n in range (10,22)]+ \ 
+                       [7*10**n for n in range (10,22)]+ \
+                       [9*10**n for n in range (10,22)]+ \
+                       [8*10**n for n in range (10,22)])
                       
 
     #luminosities=np.array([luminosity2(i) for i in frequencies])
