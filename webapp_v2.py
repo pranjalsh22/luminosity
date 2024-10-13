@@ -1,4 +1,4 @@
-#version10
+#version11
 import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -22,14 +22,6 @@ h=6.62607015e-34 #J/Hz
 k=1.380649e-23 #m2 kg /(Ks2)
 if st.sidebar.checkbox('show constants'):
     st.sidebar.write(' G=6.67430e-11 Nm2/kg2 :s m_sun_kg = 1.988e30 kg :s c=299792458 m/s :s sbc=5.67e-8 watt/m2K4 :s pi=3.141592653589 :s h=6.62607015e-34 J/Hz :s k=1.380649e-23 m2 kg /(Ks2)')
-if st.sidebar.checkbox('show spectrum'):
-    st.sidebar.write('(-inf,3e9): Radio :s'\
-                     '(3e9,3e12): Microwave :s'\
-                     '(3e12,4.3e14): Infrared :s'\
-                     '(4.3e14,7.5e14): Visible :s'\
-                     '(7.5e14,3e16): Ultraviolet :s'\
-                     '(3e16,3e19): X-ray :s'\
-                     '(3e19,inf): Gamma-ray :s')
 
 #pre-defining processes to be used later
 def integrate_curve(x, y,a=1,b=1):
@@ -742,14 +734,25 @@ def the_Frequency_vs_Luminosity_part2(p):
     global frequencies, luminosities
     p+=1
     #frequencies=sorted([10**n for n in range(1,21)]+[3*10**n for n in range (0,21)]+[7*10**n for n in range (0,21)])
-    frequencies=sorted([10**n for n in range(1,23)]+ \
-                       [2*10**n for n in range (0,22)]+ \
-                       [4*10**n for n in range (0,22)]+ \
-                       [6*10**n for n in range (0,22)]+ \
-                       [7*10**n for n in range (0,22)]+ \
-                       [9*10**n for n in range (0,22)]+ \
-                       [8*10**n for n in range (0,22)])
-                      
+    col1,col2,col3 = st.columns([0.2,0.1,1])
+    with col1:
+        st.write("large dataset")
+    with col2:
+        a=st.toggle(" ",value=True)
+    with col3:
+        st.write("Mindful subset of dataset")
+    if a:
+        frequencies=sorted([10**n for n in range(1,23)]+ \
+                       [3*10**n for n in range (0,22)])
+    else:
+        frequencies=sorted([10**n for n in range(1,23)]+ \
+                           [2*10**n for n in range (0,22)]+ \
+                           [4*10**n for n in range (0,22)]+ \
+                           [6*10**n for n in range (0,22)]+ \
+                           [7*10**n for n in range (0,22)]+ \
+                           [9*10**n for n in range (0,22)]+ \
+                           [8*10**n for n in range (0,22)])
+                          
 
     #luminosities=np.array([luminosity2(i) for i in frequencies])
     luminosities=[]
@@ -766,13 +769,58 @@ def the_Frequency_vs_Luminosity_part2(p):
 
     L=integrate_curve(frequencies,luminosities,a=1e10,b=1e15) 
     st.info(f"Net Luminosity is {L}")
-    
+
+    #spectrum range :
+    if st.checkbox('show spectrum'):
+        data = {
+        "Category":
+            ["Radio",
+            "Microwave",
+            "Infrared",
+            "Visible",
+            "Ultraviolet",
+            "X-ray",
+            "Gamma-ray"],
+        "Frequency Range (Hz)":
+        [ "(-inf, 3e9)",
+            "(3e9, 3e12)",
+            "(3e12, 4.3e14)",
+            "(4.3e14, 7.5e14)",
+            "(7.5e14, 3e16)",
+            "(3e16, 3e19)",
+            "(3e19, inf)"],
+        "Wavelength Range (m)":
+        [ f"(above {c/3e9:.3e})",
+            f"({c/3e9:.3e}, {c/3e12:.3e})",
+            f"({c/3e12:.3e}, {c/4.3e14:.3e})",
+            f"({c/4.3e14:.3e}, {c/7.5e14:.3e})",
+            f"({c/7.5e14:.3e}, {c/3e16:.3e})",
+            f"({c/3e16:.3e}, {c/3e19:.3e})",
+            f"({c/3e19:.3e}, 0)"]}
+
+        st.table(data)
+        
     #snipped net luminosity
-    y1=3e12 #where IR bgins 
-    y2=3e16 #where UV ends
+    col1,col2,col3,col4,col5 =st.columns([0.3,0.3,0.1,0.3,0.4])
+    with col1:
+        ""
+        ""
+        "Net luminosity from"
+    with col2:
+        y1=st.number_input("",value=3e12,format='%e') #where IR bgins 
+    with col3:
+        ""
+        ""
+        "Hz to"
+    with col4:
+        y2=st.number_input("",value=3e16,format='%e') #where UV ends
+    with col5:
+        ""
+        ""
+        "Hz"
     frequencies_snipped,luminosities_snipped = snip_data(frequencies, luminosities, y1, y2)
     L_snipped = integrate_curve(frequencies_snipped,luminosities_snipped,a=1e10,b=1e15)
-    st.info(f"Net Luminosity from IR(3e12) to UV(3e16)  is {L_snipped}")
+    st.info(f"Net Luminosity from {y1:.2e} Hz ({spectrum_category(y1)}) to {y2:.2e} Hz ({spectrum_category(y2)})  is {L_snipped}")
 
 
     energies=[h*v/(1.60217663e-19*1e3) for v in frequencies]
@@ -892,6 +940,129 @@ def run(p):
     
 p=1
 run(p)
+
+
+
+#--------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------
+# conversion calculator 
+#--------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------
+converter = st.checkbox("Conversion calculator", value= False)
+if converter :
+    conversion_to_si = {
+        # Frequency units to Hertz (Hz)
+        "Hertz (Hz)": 1,
+        "Kilohertz (kHz)": 1e3,
+        "Megahertz (MHz)": 1e6,
+        "Gigahertz (GHz)": 1e9,
+        
+        # Wavelength units to Meters (m)
+        "Meters (m)": 1,
+        "Centimeters (cm)": 0.01,
+        "Nanometers (nm)": 1e-9,
+        "Picometers (pm)": 1e-12,
+        "Ångström (Å)": 1e-10,
+        
+        # Energy units to Joules (J)
+        "Joules (J)" : 1,
+        "Ergs (Erg)": 1e-7,
+        "Electron Volts (eV)": 1.60218e-19,
+        "Kiloelectron Volts (keV)": 1.60218e-16, 
+    }
+
+
+    # Categories
+    frequency_units = list(conversion_to_si.keys())[:4]
+    wavelength_units = list(conversion_to_si.keys())[4:9]
+    energy_units = list(conversion_to_si.keys())[9:]
+
+
+
+
+    # Input for value and units
+    col1, col2, col3, col4 = st.columns(4)
+
+    #taking input value and unit
+    with col1:
+        input_value = st.number_input("Input Value:", format="%e")
+    with col2:
+        input_unit = st.selectbox("Input Unit:", list(conversion_to_si.keys()))
+
+    #changing input value si version of input unit
+    if input_unit in frequency_units:
+        si_input="Hz"
+        output = input_value*conversion_to_si.get(input_unit)
+    elif input_unit in wavelength_units:
+        si_input="m"
+        output = input_value*conversion_to_si.get(input_unit)
+    elif input_unit in energy_units:
+        si_input="J"
+        output = input_value*conversion_to_si.get(input_unit)
+
+    #selecting output unit
+    with col4:
+        output_unit = st.selectbox("Output Unit:", list(conversion_to_si.keys()))
+
+    #changing to output unit 
+    if output_unit in frequency_units:
+        if input_unit in frequency_units:
+            output = output / conversion_to_si.get(output_unit)
+
+        elif input_unit in wavelength_units:
+            output = (c/output) / conversion_to_si.get(output_unit)
+
+        elif input_unit in energy_units:
+            output = (h*output) / conversion_to_si.get(output_unit)
+
+    if output_unit in wavelength_units:
+        if input_unit in frequency_units:
+            output = (c/output) / conversion_to_si.get(output_unit)
+
+        elif input_unit in wavelength_units:
+            output = (output) / conversion_to_si.get(output_unit)
+
+        elif input_unit in energy_units:
+            output = (h*c/output) / conversion_to_si.get(output_unit)
+
+    if output_unit in energy_units:
+        if input_unit in frequency_units:
+            output = (h*output) / conversion_to_si.get(output_unit)
+
+        elif input_unit in wavelength_units:
+            output = (h*c/output) / conversion_to_si.get(output_unit)
+
+        elif input_unit in energy_units:
+            output = (output) / conversion_to_si.get(output_unit)
+
+    #display output
+    with col3:
+        st.success(f'output value :s {output:.2e}')
+st.markdown('''<hr style="
+                    border: 0;
+                    border-top: 3px double white;
+                    background: white;
+                    margin: 20px 0;" />''', unsafe_allow_html=True)
+#--------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------
+#By line
+st.markdown("""
+<div style='text-align: centre ;'>
+    <p><strong>By Pranjal Sharma</strong></p>
+    <p><strong>under guidance of Dr. C. Konar</strong></p>
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown('''<hr style="
+                    border: 0;
+                    border-top: 3px double white;
+                    background: white;
+                    margin: 20px 0;" />''', unsafe_allow_html=True)
+
+#--------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------
+
+
 '''Unrequired work now available under extra work'''
 def extrawork(p):
     p+=1
@@ -914,14 +1085,10 @@ if extra_work:
     extrawork(p)
 st.write(f'save option available when run locally under function savethegraph() line426')
 updt=st.checkbox("Update details")
-st.markdown("""
-<div style='text-align: right;'>
-    <p><strong>By Pranjal Sharma</strong></p>
-    <p><strong>under guidance of Dr. C. Konar</strong></p>
-</div>
-""", unsafe_allow_html=True)
+
 if updt:
     st.write("""
+    version 11: added conversion calculator + custom freq selection while calculating net luminosity 
     version 10: added snipped luminosity :s
     version 9: added angle of inclination :s
     version 8: added EF_E vs E graph by taking input of d and cgs option in EFE :s
