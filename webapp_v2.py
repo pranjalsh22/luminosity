@@ -1,4 +1,4 @@
-#version11
+#version12
 import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -31,14 +31,14 @@ def integrate_curve(x, y,a=1,b=1):
             dx = (x[i] - x[i-1]) #/a
             dy = (np.float128(y[i]) + np.float128(y[i-1])) #/b
             integral +=  (np.float128(dy)*np.float128(dx))#*(a*b)
-    print(f'print integral is {integral}')
+    
     return integral
-def snip_data(x, y, y1, y2):
+def snip_data(x, y, x1, x2):
     # Convert lists to numpy arrays for easier manipulation
     x = np.array(x)
     y = np.array(y)
 
-    mask = (y >= y1) & (y <= y2)
+    mask = (x >= x1) & (x <= x2)
 
     x_snipped = x[mask]
     y_snipped = y[mask]
@@ -733,17 +733,20 @@ def the_Frequency_vs_Luminosity_part(p):
 def the_Frequency_vs_Luminosity_part2(p):
     global frequencies, luminosities
     p+=1
-    #frequencies=sorted([10**n for n in range(1,21)]+[3*10**n for n in range (0,21)]+[7*10**n for n in range (0,21)])
     col1,col2,col3 = st.columns([0.2,0.1,1])
     with col1:
-        st.write("large dataset")
+        st.write("Large dataset")
     with col2:
         a=st.toggle(" ",value=True)
     with col3:
         st.write("Mindful subset of dataset")
     if a:
         frequencies=sorted([10**n for n in range(1,23)]+ \
-                       [3*10**n for n in range (0,22)])
+                       [3*10**n for n in range (0,22)]+ \
+                           list(np.linspace(1e-5*F1,100*F2,40))+ \
+                           list(np.linspace(3e12, 4.3e14,20))+ \
+                           list(np.linspace(4.3e14, 7.5e14,20))+ \
+                           list(np.linspace(7.5e14, 3e16,20)))
     else:
         frequencies=sorted([10**n for n in range(1,23)]+ \
                            [2*10**n for n in range (0,22)]+ \
@@ -751,10 +754,12 @@ def the_Frequency_vs_Luminosity_part2(p):
                            [6*10**n for n in range (0,22)]+ \
                            [7*10**n for n in range (0,22)]+ \
                            [9*10**n for n in range (0,22)]+ \
-                           [8*10**n for n in range (0,22)])
+                           [8*10**n for n in range (0,22)]+ \
+                           list(np.linspace(1e-5*F1,100*F2,40))+ \
+                           list(np.linspace(3e12, 4.3e14,20))+ \
+                           list(np.linspace(4.3e14, 7.5e14,20))+ \
+                           list(np.linspace(7.5e14, 3e16,20)))
                           
-
-    #luminosities=np.array([luminosity2(i) for i in frequencies])
     luminosities=[]
     for i in frequencies:
         Lnew=luminosity2(i)
@@ -764,11 +769,11 @@ def the_Frequency_vs_Luminosity_part2(p):
             luminosities.append(0)
         
         
-    st.latex(r'L_\nu = \frac{16 \pi^2 h \nu^3}{c^2} cosi \int_{r_i}^{r_o}  \frac{r}{e^{\frac{h \nu}{k T(r)}}-1} d r')
-    st.latex(r"where, \ T(r)^4 =\left( \frac {3GM_0\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_i}{r}}}{r^3} \right]")
+    st.latex(r'L_\nu = \frac{16 \pi^2 h \nu^3}{c^2} cosi \int_{r_i}^{r_o}  \frac{r}{e^{\frac{h \nu}{k T(r)}}-1} d r \ \ W Hz^{-1}')
+    st.latex(r"where, \ T(r)^4 =\left( \frac {3GM_0\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_i}{r}}}{r^3} \right] \ \ K^4")
 
     L=integrate_curve(frequencies,luminosities,a=1e10,b=1e15) 
-    st.info(f"Net Luminosity is {L}")
+    st.info(f"Net Luminosity is {L} Watts")
 
     #spectrum range :
     if st.checkbox('show spectrum'):
@@ -807,21 +812,22 @@ def the_Frequency_vs_Luminosity_part2(p):
         ""
         "Net luminosity from"
     with col2:
-        y1=st.number_input("",value=3e12,format='%e') #where IR bgins 
+        x1=st.number_input("",value=4.3e14,format='%e')  
     with col3:
         ""
         ""
         "Hz to"
     with col4:
-        y2=st.number_input("",value=3e16,format='%e') #where UV ends
+        x2=st.number_input("",value=7.5e14,format='%e') 
     with col5:
         ""
         ""
         "Hz"
-    frequencies_snipped,luminosities_snipped = snip_data(frequencies, luminosities, y1, y2)
+    frequencies_snipped,luminosities_snipped = snip_data(frequencies, luminosities, x1, x2)
     L_snipped = integrate_curve(frequencies_snipped,luminosities_snipped,a=1e10,b=1e15)
-    st.info(f"Net Luminosity from {y1:.2e} Hz ({spectrum_category(y1)}) to {y2:.2e} Hz ({spectrum_category(y2)})  is {L_snipped}")
-
+    st.success(f"Net Luminosity from "+ r'$ \nu_1  =  $'+f" {x1:.2e} Hz ({spectrum_category(x1)}) to " + r"$ \nu_2  =  $"+ f"{x2:.2e} Hz ({spectrum_category(x2)})  is {L_snipped} Watts")
+    st.success(f"Average Luminosity "+\
+               r'$\bar{L} =\frac{ {\int_{\nu_1}^{\nu_2}}{L_\nu} d\nu} {\nu_2-\nu_1} = $' +f" {L_snipped/(x2-x1):e} Watts/Hz")
 
     energies=[h*v/(1.60217663e-19*1e3) for v in frequencies]
     EL=[e*v for e,v in zip(luminosities,frequencies)]    
@@ -852,7 +858,7 @@ def the_Frequency_vs_Luminosity_part2(p):
         if op1==True:
             st.latex(r'\LARGE{\underline{\bold{L_\nu \ vs \  \nu}}}')
             plot_log_scale(frequencies, luminosities,spectrumv=True,xlabel=r'$log(\nu) \ in \ Hz$',ylabel=r'$log(L_{\nu}) \ in \ W Hz^{-1}$')
-            st.info(f'Max $ L_v $ = {lmax:e} watt/m^2Hz observed in {spectrum_category(f_lmax)} region ($ v $ = {f_lmax:.1e} Hz).')
+            st.info(r'Max $ L_\nu $ = ' + f'{lmax:e} '+ r' $W m^{-2} Hz^{-1}$' + f'observed in {spectrum_category(f_lmax)} region at ' +r'$ \nu $'+ f" = {f_lmax:.1e} Hz")
 
             st.markdown('''<hr style="
                     border: 0;
@@ -1062,8 +1068,6 @@ st.markdown('''<hr style="
 #--------------------------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------
 
-
-'''Unrequired work now available under extra work'''
 def extrawork(p):
     p+=1
     option_selected = st.selectbox("select option:",["Flux profile",\
@@ -1083,12 +1087,12 @@ extra_work = st.checkbox("see extra work done")
 if extra_work:
     p=1
     extrawork(p)
-st.write(f'save option available when run locally under function savethegraph() line426')
 updt=st.checkbox("Update details")
 
 if updt:
     st.write("""
-    version 11: added conversion calculator + custom freq selection while calculating net luminosity 
+    version 12: improved string format and changed input frequency pattern, corrected snipped integration :s
+    version 11: added conversion calculator + custom freq selection while calculating net luminosity :s 
     version 10: added snipped luminosity :s
     version 9: added angle of inclination :s
     version 8: added EF_E vs E graph by taking input of d and cgs option in EFE :s
