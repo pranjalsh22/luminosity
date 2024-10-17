@@ -826,8 +826,8 @@ def the_Frequency_vs_Luminosity_part2(p):
     frequencies_snipped,luminosities_snipped = snip_data(frequencies, luminosities, x1, x2)
     L_snipped = integrate_curve(frequencies_snipped,luminosities_snipped,a=1e10,b=1e15)
     st.success(f"Net Luminosity from "+ r'$ \nu_1  =  $'+f" {x1:.2e} Hz ({spectrum_category(x1)}) to " + r"$ \nu_2  =  $"+ f"{x2:.2e} Hz ({spectrum_category(x2)})  is {L_snipped} Watts")
-    st.success(f"Average Luminosity "+\
-               r'$\bar{L} =\frac{ {\int_{\nu_1}^{\nu_2}}{L_\nu} d\nu} {\nu_2-\nu_1} = $' +f" {L_snipped/(x2-x1):e} Watts/Hz")
+    st.success(f"Average Luminosity density "+\
+               r'$ \bar{L} =\frac{ {\int_{\nu_1}^{\nu_2}}{L_\nu} d\nu} {\nu_2-\nu_1} = $' +f" {L_snipped/(x2-x1):e} Watts/Hz")
 
     energies=[h*v/(1.60217663e-19*1e3) for v in frequencies]
     EL=[e*v for e,v in zip(luminosities,frequencies)]    
