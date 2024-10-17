@@ -469,7 +469,7 @@ m_bh_kg = m_bh * m_sun_kg
 r_s = 2 * G * m_bh_kg / c ** 2
 
 # Input for r_i in units of r_s
-r_i_rs = st.sidebar.number_input("Value of r_i in units of Schwarzschild radius (r_s)", value=3,format='%e')
+r_i_rs = st.sidebar.number_input("Value of r_i in units of Schwarzschild radius (r_s)", value=3e0,format='%e')
 r_i = r_i_rs * r_s
 
 # Input for r_o in units of r_s
