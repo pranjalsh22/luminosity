@@ -331,7 +331,7 @@ if choice =='Accretion rate':
     
 if choice =='Eddington ratio and accretion efficiency':
     st.sidebar.latex(r"\dot{M} = \frac {\epsilon} {\zeta} \frac {1.3 10^{31}}{c^2} M_{BH} \ ,where \ M_{BH} \ is \ in \ solar \ masses")
-    eddington_ratio = st.sidebar.number_input(r"Eddington ratio ($\epsilon$)", value=1e-1.00, format="%e")
+    eddington_ratio = st.sidebar.number_input(r"Eddington ratio ($\epsilon$)", value=1e-1, format="%e")
     accretion_efficiency = st.sidebar.number_input("Accretion efficiency ($\zeta$)", value=1e-1.75, format="%e")
     m_dot=m_dotf(eddington_ratio,accretion_efficiency)
 
