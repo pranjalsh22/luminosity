@@ -44,9 +44,7 @@ def snip_data(x, y, x1, x2):
     y_snipped = y[mask]
 
     return x_snipped, y_snipped
-def path_of_file(file_name):
-    abs_path = os.path.abspath(file_name)
-    st.write('file is saved  at: ',abs_path)
+
 def save_data(dataframe):
     file_name = st.text_input("Please enter the name of the CSV file (without extension): ")
     file_name += ".csv"  # Add .csv extension
@@ -55,84 +53,6 @@ def save_data(dataframe):
             st.write(f"Data has been successfully saved to {file_name}.")
             st.write(path_of_file(file_name))
 
-def sf(n):
-    return len(str(n))
-def print_table(aa, bb):
-    table = "\n".join([f"{i + 1},  {aa[i]:e},  {bb[i]:e}" for i in range(len(aa))])
-    st.write(table)
-
-def print_table_simply(aa, bb):
-    table = "\n".join([f"{i + 1},  {aa[i]},  {bb[i]}" for i in range(len(aa))])
-    st.write(table)
-def name(var):
-    for name, value in globals().items():
-        if value is var and isinstance(value, list):
-            return name
-    
-
-def give(zipped, value):
-    for key, val in zipped:
-        if val == value:
-            return key
-
-def plot_multi_curve(x_values, y_values_list, labels, xlabel=None, ylabel=None):
-    xlabel=name(x_values)
-    ylabel=name(y_values)
-    # Check if number of y_values_list matches the number of labels
-    if labels is not None and len(y_values_list) != len(labels):
-        raise ValueError("Number of labels must match the number of y value lists.")
-
-    fig, ax = plt.subplots()
-
-    # Plot each curve
-    for i, y_values in enumerate(y_values_list):
-        label = labels[i] if labels else None
-        ax.plot(x_values, y_values, label=label)
-
-    ax.set_xscale('log')
-    ax.set_yscale('log')
-
-    # Add title and labels
-    if xlabel==None or ylabel==None:
-        xlabel=name(x_values)
-        ylabel=name(y_values)            
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
-    
-        
-    # Add legend if labels are provided
-    if labels:
-        ax.legend()
-    savethegraph()
-    # Return the Matplotlib figure
-    return fig
-
-def plot_multi_curve_notlog(x_values, y_values_list,labels,xlabel,ylabel):
-    
-
-    # Check if number of y_values_list matches the number of labels
-    if labels is not None and len(y_values_list) != len(labels):
-        raise ValueError("Number of labels must match the number of y value lists.")
-
-    # Plot each curve
-    for i, y_values in enumerate(y_values_list):
-        label = labels[i] if labels else None
-        plt.plot(x_values, y_values, label=label)
-    plt.xscale('log')
-    plt.yscale('log')
-    # Add title and labels
-    if xlabel==None or ylabel==None:
-        xlabel=name(x_values)
-        ylabel=name(y_values)            
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
-
-    # Add legend if labels are provided
-    if labels:
-        plt.legend()
-    savethegraph()
-    # Show plot
-    return fig
 def print_constants():
     constants_str = f"boltzman constant k = {k} Hz/K\n" \
                     f"planck's constant h = {h} J/Hz\n" \
@@ -146,14 +66,6 @@ def print_constants():
 def Rs(m):
     r_s = 2*G*m/(c**2)
     return r_s
-
-def temp2(rr):#old formula 
-    global t1,t2,t,r
-    r=rr*r_s
-    t1= 3*G*m_bh_kg*m_dot/(8*pi*sbc)
-    t2= (1-(r_i/(r))**0.5)/r**3
-    t=(t1*t2)**0.25
-    return(t)
 
 def temp(rr):
     global t1,t2,t,r,t_disk
@@ -343,77 +255,7 @@ def intensity(t):
         y.append(i)
     return y
 
-def log10_list_of_lists(input_list):
-    # Initialize an empty list to store the results
-    output_list = []
 
-    # Iterate through each sublist in the input list
-    for sublist in input_list:
-        # Initialize an empty sublist to store the log10 of each element
-        log_sublist = []
-        # Iterate through each element in the sublist
-        for num in sublist:
-            # Take the log10 of the element and append it to the log_sublist
-            log_sublist.append(np.log10(num))
-        # Append the log_sublist to the output_list
-        output_list.append(log_sublist)
-
-    return output_list
-
-def sum_lists(input_list):
-    # Initialize an empty list to store the sums
-    sums = []
-
-    # Iterate over the elements of the first sublist to get the length
-    length = len(input_list[0])
-
-    # Iterate over each index
-    for i in range(length):
-        # Initialize the sum for this index
-        index_sum = 0
-
-        # Iterate over each sublist in the input list
-        for sublist in input_list:
-            # Add the corresponding element to the sum
-            index_sum += sublist[i]
-
-        # Append the sum to the list of sums
-        sums.append(index_sum)
-
-    return sums
-def B_lambda(W,T):
-    global a,b
-    a = 2.0 * h * c**2 /W**5
-    b = h * c / (W * k * T)
-    return (2 * h * c**2 / W**5) / (np.exp(h * c / (W * k * T)) - 1)
-
-def scaleit(l,a):
-    ll=[i*a for i in l]
-    return ll
-
-def wavelength_category(wavelength):
-    if wavelength < 100:
-        return "Vacuum Ultraviolet (VUV)"
-    elif 100 <= wavelength < 200:
-        return "Deep Ultraviolet (DUV) / Extreme Ultraviolet (EUV)"
-    elif 200 <= wavelength < 280:
-        return "Far Ultraviolet (FUV)"
-    elif 280 <= wavelength < 380:
-        return "Ultraviolet (UV)"
-    elif 380 <= wavelength < 450:
-        return "Violet"
-    elif 450 <= wavelength < 495:
-        return "Blue"
-    elif 495 <= wavelength < 570:
-        return "Green"
-    elif 570 <= wavelength < 590:
-        return "Yellow"
-    elif 590 <= wavelength < 625:
-        return "Orange"
-    elif 625 <= wavelength < 740:
-        return "Red"
-    else:
-        return "Infrared (IR)"
 def spectrum_category(frequency):
     
     if frequency < 3e9:  # Radio
@@ -442,7 +284,7 @@ def generate_pattern(n):
                     break
                 result.append(value)
         current *= 10
-    for i in range(1,r_i_rs+1):
+    for i in range(1,int(r_i_rs+1)):
         try:
             result.remove(i)
         except:
@@ -622,7 +464,7 @@ def the_Frequency_vs_Luminosity_part2(p):
             luminosities.append(0)
     col1,col2=st.columns([2,1.5])
     with  col1:
-        st.latex(r" \dot{M} = \frac {\epsilon} {\zeta} \frac {1.3 10^{31}}{c^2} \frac{M_{\bullet}}{M_{\odot}} ")    
+        st.latex(r" \dot{M} = \frac {\epsilon} {\zeta} \frac {1.3 \times 10^{31}}{c^2} \frac{M_{\bullet}}{M_{\odot}} ")    
         st.latex(r"T(r)^4 =\left( \frac {3GM_{\bullet}\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_i}{r}}}{r^3} \right] \ \ K^4")
         st.latex(r'L_\nu = \frac{16 \pi^2 h \nu^3}{c^2} cosi \int_{r_i}^{r_o}  \frac{r}{e^{\frac{h \nu}{k T(r)}}-1} d r \ \ W Hz^{-1}')
     
@@ -635,7 +477,13 @@ def the_Frequency_vs_Luminosity_part2(p):
         st.write(r"$ \sigma \rightarrow  Stefan \ Bolzsmann \ constant $")
         st.write(r"$ h \rightarrow  Planck's \ constant $")
 
-    
+    if st.checkbox(r"Derivation of $ \dot{M} $",value=True):
+        st.latex(r"L = \zeta \dot{M} c^2")
+        st.latex(r"L = \epsilon L_{Edd}")
+        st.latex(r"\dot{M} = \frac{L}{\zeta c^2}")
+        st.latex(r"\dot{M} = \frac{\epsilon L_{Edd}}{\zeta c^2}")
+        st.latex(r" \dot{M} = \frac {\epsilon} {\zeta} \frac {1.3 \times 10^{31}}{c^2} \frac{M_{\bullet}}{M_{\odot}} ")    
+        
     #spectrum range :
     if st.checkbox('show spectrum'):
         data = {
@@ -833,8 +681,6 @@ def run(p):
 p=1
 run(p)
 
-
-
 #--------------------------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------
 # conversion calculator 
@@ -868,9 +714,6 @@ if converter :
     frequency_units = list(conversion_to_si.keys())[:4]
     wavelength_units = list(conversion_to_si.keys())[4:9]
     energy_units = list(conversion_to_si.keys())[9:]
-
-
-
 
     # Input for value and units
     col1, col2, col3, col4 = st.columns(4)
