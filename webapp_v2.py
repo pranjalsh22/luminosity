@@ -20,8 +20,11 @@ sbc=5.67e-8 #watt/m2K4
 pi=3.141592653589
 h=6.62607015e-34 #J/Hz
 k=1.380649e-23 #m2 kg /(Ks2)
+
+FO1=3.2928e15
+FO2=8.4922e15
 if st.sidebar.checkbox('show constants'):
-    st.sidebar.write(' G=6.67430e-11 Nm2/kg2 :s m_sun_kg = 1.988e30 kg :s c=299792458 m/s :s sbc=5.67e-8 watt/m2K4 :s pi=3.141592653589 :s h=6.62607015e-34 J/Hz :s k=1.380649e-23 m2 kg /(Ks2)')
+    st.sidebar.write('FO1=3.2928e15 Hz :s FO2=8.4922e15 Hz :s G=6.67430e-11 Nm2/kg2 :s m_sun_kg = 1.988e30 kg :s c=299792458 m/s :s sbc=5.67e-8 watt/m2K4 :s pi=3.141592653589 :s h=6.62607015e-34 J/Hz :s k=1.380649e-23 m2 kg /(Ks2)')
 
 #pre-defining processes to be used later
 def integrate_curve(x, y,a=1,b=1):
@@ -134,6 +137,8 @@ def plot_log_scale(x_list, y_list,temperature=False,spectrumv=False,spectrumf=Fa
             if F12:
                 plt.plot([F1,F1],[0,10**24],label='F1')
                 plt.plot([F2,F2],[0,10**24],label='F2')
+        
+                plt.plot()
         if settings==True or settings== False: 
             #show spectrum lines
             spctrm=True #st.checkbox("show EM spectrum Range",value=True)
@@ -145,6 +150,11 @@ def plot_log_scale(x_list, y_list,temperature=False,spectrumv=False,spectrumf=Fa
                 plt.fill_between(np.linspace(7.5e14,3e16,5),np.linspace(10**24,10**24,5),alpha=0.3,label='UV')
                 plt.fill_between(np.linspace(3e16,3e19,5),np.linspace(10**24,10**24,5),alpha=0.3,label='X-ray')
                 plt.fill_between(np.linspace(3e19,3e30,5),np.linspace(10**24,10**24,5),alpha=0.3,label='Gamma-ray')
+
+            FO12=st.checkbox("show frequency for 1st and second ionisation of oxygen",value=True)
+            if FO12:
+                plt.plot([FO1,FO1],[0,10**24],label='First ionisation of oxygen')
+                plt.plot([FO2,FO2],[0,10**24],label='second ionisation of oxygen')
     if spectrume or spectrumf:
         if spectrume:
             p=55
@@ -800,7 +810,7 @@ st.markdown('''<hr style="
 updt=st.checkbox("Update details")
 if updt:
     st.write("""
-    version 13: Using symbols to show parameters + added m_dot equation + removed extra work  :s
+    version 13: Using symbols to show parameters + added m_dot equation + removed extra work + first and second ionisation freq of O :s
     version 12: improved string format and changed input frequency pattern, corrected snipped integration :s
     version 11: added conversion calculator + custom freq selection while calculating net luminosity :s 
     version 10: added snipped luminosity :s
