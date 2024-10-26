@@ -24,7 +24,7 @@ k=1.380649e-23 #m2 kg /(Ks2)
 FO1=3.2928e15
 FO2=8.4922e15
 if st.sidebar.checkbox('show constants'):
-    st.sidebar.write('FO1=3.2928e15 Hz :s FO2=8.4922e15 Hz :s G=6.67430e-11 Nm2/kg2 :s m_sun_kg = 1.988e30 kg :s c=299792458 m/s :s sbc=5.67e-8 watt/m2K4 :s pi=3.141592653589 :s h=6.62607015e-34 J/Hz :s k=1.380649e-23 m2 kg /(Ks2)')
+    st.sidebar.write('EO1=13.618 eV :s FO1=3.2928e15 Hz :s EO2=35.121 eV :s FO2=8.4922e15 Hz :s G=6.67430e-11 Nm2/kg2 :s m_sun_kg = 1.988e30 kg :s c=299792458 m/s :s sbc=5.67e-8 watt/m2K4 :s pi=3.141592653589 :s h=6.62607015e-34 J/Hz :s k=1.380649e-23 m2 kg /(Ks2)')
 
 #pre-defining processes to be used later
 def integrate_curve(x, y,a=1,b=1):
@@ -525,7 +525,7 @@ def the_Frequency_vs_Luminosity_part2(p):
         st.table(data)
     L=integrate_curve(frequencies,luminosities,a=1e10,b=1e15) 
     st.info(f"Bolometric Luminosity L = {L} Watts")
-    if st.checkbox("For custom range of frequency"):
+    if st.checkbox("For custom range of frequency",value=True):
         #snipped net luminosity
         col1,col2,col3,col4,col5 =st.columns([0.3,0.3,0.1,0.3,0.4])
         with col1:
@@ -533,13 +533,13 @@ def the_Frequency_vs_Luminosity_part2(p):
             ""
             "Net luminosity from"
         with col2:
-            x1=st.number_input("",value=4.3e14,format='%e')  
+            x1=st.number_input("",value=FO1,format='%e')  
         with col3:
             ""
             ""
             "Hz to"
         with col4:
-            x2=st.number_input("",value=7.5e14,format='%e') 
+            x2=st.number_input("",value=FO2,format='%e') 
         with col5:
             ""
             ""
@@ -758,7 +758,7 @@ if converter :
             output = (c/output) / conversion_to_si.get(output_unit)
 
         elif input_unit in energy_units:
-            output = (h*output) / conversion_to_si.get(output_unit)
+            output = (output/h) / conversion_to_si.get(output_unit)
 
     if output_unit in wavelength_units:
         if input_unit in frequency_units:
@@ -810,7 +810,7 @@ st.markdown('''<hr style="
 updt=st.checkbox("Update details")
 if updt:
     st.write("""
-    version 13: Using symbols to show parameters + added m_dot equation + removed extra work + first and second ionisation freq of O :s
+    version 13: Using symbols to show parameters + added m_dot equation + removed extra work  :s
     version 12: improved string format and changed input frequency pattern, corrected snipped integration :s
     version 11: added conversion calculator + custom freq selection while calculating net luminosity :s 
     version 10: added snipped luminosity :s
