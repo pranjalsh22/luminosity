@@ -854,6 +854,8 @@ st.markdown('''<hr style="
 updt=st.checkbox("Update details")
 if updt:
     st.write("""
+    version 14: changed to multiple graph select box, removed the option to check slope, now need to define
+                x and y range in plotlogscale itself, bg colour selected based on spectrumv or spectrume
     version 13: Using symbols to show parameters + added m_dot equation + removed extra work  :s
     version 12: improved string format and changed input frequency pattern, corrected snipped integration :s
     version 11: added conversion calculator + custom freq selection while calculating net luminosity :s 
