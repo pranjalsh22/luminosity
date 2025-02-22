@@ -1,4 +1,4 @@
-"version13"
+"version14"
 import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -6,11 +6,16 @@ from tabulate import tabulate
 import pandas as pd
 import warnings
 import os
-st.set_option('deprecation.showPyplotGlobalUse', False)
+#----------------------------------SECTION 1----------------------------------------------------------
 # Suppress all warnings
+st.set_option('deprecation.showPyplotGlobalUse', False) 
 warnings.filterwarnings("ignore")
-#COPY PASTING FORMULAS
-st.sidebar.info(" ## Version 13")
+
+#set version
+st.sidebar.info(" ## Version 14")
+
+#----------------------------------SECTION 2----------------------------------------------------------
+
 #constants
 global G,m_sun_kg, c, sbc,pi, h,k 
 G=6.67430e-11 #'''Nm2/kg2'''
@@ -26,50 +31,45 @@ FO2=8.4922e15
 if st.sidebar.checkbox('show constants'):
     st.sidebar.write('EO1=13.618 eV :s FO1=3.2928e15 Hz :s EO2=35.121 eV :s FO2=8.4922e15 Hz :s G=6.67430e-11 Nm2/kg2 :s m_sun_kg = 1.988e30 kg :s c=299792458 m/s :s sbc=5.67e-8 watt/m2K4 :s pi=3.141592653589 :s h=6.62607015e-34 J/Hz :s k=1.380649e-23 m2 kg /(Ks2)')
 
+#----------------------------------SECTION 3----------------------------------------------------------
+
 #pre-defining processes to be used later
-def integrate_curve(x, y,a=1,b=1):
+
+#trapezoid rule integration
+def integrate_curve(x, y,a=1,b=1): 
     integral = 0.0
     for i in range(1,len(x)):
         if y[i-1]!=np.inf and y[i]!=np.inf:
             dx = (x[i] - x[i-1]) #/a
             dy = (np.float128(y[i]) + np.float128(y[i-1])) #/b
             integral +=  (np.float128(dy)*np.float128(dx))#*(a*b)
-    
     return integral
+
+#to take data upto a certain value of x and y 
 def snip_data(x, y, x1, x2):
-    # Convert lists to numpy arrays for easier manipulation
     x = np.array(x)
     y = np.array(y)
-
     mask = (x >= x1) & (x <= x2)
-
     x_snipped = x[mask]
     y_snipped = y[mask]
 
     return x_snipped, y_snipped
 
+#doesnt work through webapps but works on localhost
 def save_data(dataframe):
     file_name = st.text_input("Please enter the name of the CSV file (without extension): ")
     file_name += ".csv"  # Add .csv extension
     if st.button("save data",key="1"):
             dataframe.to_csv(file_name, index=False)
             st.write(f"Data has been successfully saved to {file_name}.")
-            st.write(path_of_file(file_name))
+            #st.write(path_of_file(file_name))
 
-def print_constants():
-    constants_str = f"boltzman constant k = {k} Hz/K\n" \
-                    f"planck's constant h = {h} J/Hz\n" \
-                    f"G = {G} Nm2/kg2\n" \
-                    f"m_sun_kg = {m_sun_kg} kg\n" \
-                    f"c = {c} m/s\n" \
-                    f"pi = {pi}\n" \
-                    f"sbc or rho = {sbc} (W / (m2 x K4))"
-    st.write(constants_str)
-
+#find schwarzchild radius
 def Rs(m):
     r_s = 2*G*m/(c**2)
     return r_s
 
+#temperature
 def temp(rr):
     global t1,t2,t,r,t_disk
     r=rr*r_s
@@ -78,7 +78,7 @@ def temp(rr):
     t=t_disk*t1*t2
     return(t)
 
-
+#integrating method
 def simpsons_one_third_rule(ff, a, b, n,f):
     #print("in simpson's 1/3 rule")
     if n % 2 != 0:
@@ -98,6 +98,8 @@ def simpsons_one_third_rule(ff, a, b, n,f):
     integral *= h/3
     #print('integral final =',integral)
     return integral
+
+#defining funtion to be integrated
 def ff(x):
     return (x**(5/3)) / (np.exp(x)-1)
     
@@ -124,92 +126,72 @@ def luminosity2(ff):
     integration=simpsons_one_third_rule(ff2,r_i+r_s,r_o,10000,f)
     lum=cos_i*A*integration
     return lum
-def plot_log_scale(x_list, y_list,temperature=False,spectrumv=False,spectrumf=False,spectrume=False, show_points=True, interactive=True,xlabel='x',ylabel='y'):
+
+
+#THE ULTIMATE PLOTTER
+
+def plot_log_scale(x_list, y_list,xo,xn,yo,yn,temperature=False,spectrumv=False,spectrume=False, show_points=True, interactive=True,xlabel='x',ylabel='y'):
     plt.figure()
     fig, ax = plt.subplots()
-    p=1
-    settings=st.checkbox("Graph settings",value=False)
+    p=np.random.randint(100)
+    settings=st.checkbox("Graph settings",value=True,key=p*100)
     
     if spectrumv:
+        #fill bg
+        plt.fill_between(np.linspace(0,3e9,5),np.linspace(10**24,10**24,5),alpha=0.3,label='radio')
+        plt.fill_between(np.linspace(3e9,3e12,5),np.linspace(10**24,10**24,5),alpha=0.3,label='microwave')
+        plt.fill_between(np.linspace(3e12,2.99e14,5),np.linspace(10**24,10**24,5),alpha=0.3,label='infrared')
+        plt.fill_between(np.linspace(3.01e14,7.5e14,5),np.linspace(10**24,10**24,5),alpha=0.3,label='visible')
+        plt.fill_between(np.linspace(7.5e14,3e16,5),np.linspace(10**24,10**24,5),alpha=0.3,label='UV')
+        plt.fill_between(np.linspace(3e16,3e19,5),np.linspace(10**24,10**24,5),alpha=0.3,label='X-ray')
+        plt.fill_between(np.linspace(3e19,3e30,5),np.linspace(10**24,10**24,5),alpha=0.3,label='Gamma-ray')
+
         #to show F1 and F2
         if settings==True:
-            F12=st.checkbox("show F1 and F2",)
+            F12=st.checkbox("show F1 and F2 (The point of change in slope of curve)",)
             if F12:
                 plt.plot([F1,F1],[0,10**24],label='F1')
                 plt.plot([F2,F2],[0,10**24],label='F2')
         
                 plt.plot()
-        if settings==True or settings== False: 
-            #show spectrum lines
-            spctrm=True #st.checkbox("show EM spectrum Range",value=True)
-            if spctrm:
-                plt.fill_between(np.linspace(0,3e9,5),np.linspace(10**24,10**24,5),alpha=0.3,label='radio')
-                plt.fill_between(np.linspace(3e9,3e12,5),np.linspace(10**24,10**24,5),alpha=0.3,label='microwave')
-                plt.fill_between(np.linspace(3e12,2.99e14,5),np.linspace(10**24,10**24,5),alpha=0.3,label='infrared')
-                plt.fill_between(np.linspace(3.01e14,7.5e14,5),np.linspace(10**24,10**24,5),alpha=0.3,label='visible')
-                plt.fill_between(np.linspace(7.5e14,3e16,5),np.linspace(10**24,10**24,5),alpha=0.3,label='UV')
-                plt.fill_between(np.linspace(3e16,3e19,5),np.linspace(10**24,10**24,5),alpha=0.3,label='X-ray')
-                plt.fill_between(np.linspace(3e19,3e30,5),np.linspace(10**24,10**24,5),alpha=0.3,label='Gamma-ray')
-
-            FO12=st.checkbox("show frequency for 1st and second ionisation of oxygen",value=True)
+    
+            FO12=st.checkbox("show frequency for 1st and second ionisation of oxygen",value=True,key=p*100+1)
             if FO12:
                 plt.plot([FO1,FO1],[0,10**24],label='First ionisation of oxygen')
                 plt.plot([FO2,FO2],[0,10**24],label='second ionisation of oxygen')
-    if spectrume or spectrumf:
-        if spectrume:
-            p=55
-        if spectrumf:
-            p=45
-        if settings:
-           
-            #show spectrum lines
-            spctrm=st.checkbox("show EM spectrum Range",value=True,key=p+1)
-            if spctrm:
-                
-                h1=h/(1.60217663e-19*1e+3)
-                plt.fill_between(np.linspace(0,h1*3e9,5),np.linspace(10**51,10**51,5),alpha=0.3,label='radio')
-                plt.fill_between(np.linspace(h1*3e9,h1*3e12,5),np.linspace(10**51,10**51,5),alpha=0.3,label='microwave')
-                plt.fill_between(np.linspace(h1*3e12,h1*2.9999e14,5),np.linspace(10**51,10**51,5),alpha=0.3,label='infrared')
-                plt.fill_between(np.linspace(h1*3.0001e14,h1*7.5e14,5),np.linspace(10**51,10**51,5),alpha=0.3,label='visible')
-                plt.fill_between(np.linspace(h1*7.5e14,h1*3e16,5),np.linspace(10**51,10**51,5),alpha=0.3,label='UV')
-                plt.fill_between(np.linspace(h1*3e16,h1*3e19,5),np.linspace(10**51,10**51,5),alpha=0.3,label='X-ray')
-                plt.fill_between(np.linspace(h1*3e19,h1*3e30,5),np.linspace(10**51,10**51,5),alpha=0.3,label='Gamma-ray')
-      
+    if spectrume :
+        p=220202
+        
+        #show spectrum lines
+        h1=h/(1.60217663e-19*1e+3)
+        plt.fill_between(np.linspace(0,h1*3e9,5),np.linspace(10**51,10**51,5),alpha=0.3,label='radio')
+        plt.fill_between(np.linspace(h1*3e9,h1*3e12,5),np.linspace(10**51,10**51,5),alpha=0.3,label='microwave')
+        plt.fill_between(np.linspace(h1*3e12,h1*2.9999e14,5),np.linspace(10**51,10**51,5),alpha=0.3,label='infrared')
+        plt.fill_between(np.linspace(h1*3.0001e14,h1*7.5e14,5),np.linspace(10**51,10**51,5),alpha=0.3,label='visible')
+        plt.fill_between(np.linspace(h1*7.5e14,h1*3e16,5),np.linspace(10**51,10**51,5),alpha=0.3,label='UV')
+        plt.fill_between(np.linspace(h1*3e16,h1*3e19,5),np.linspace(10**51,10**51,5),alpha=0.3,label='X-ray')
+        plt.fill_between(np.linspace(h1*3e19,h1*3e30,5),np.linspace(10**51,10**51,5),alpha=0.3,label='Gamma-ray')
+
     if show_points:
         plt.scatter(x_list, y_list, marker='.', linestyle='-')
         plt.plot(x_list, y_list, marker='.', linestyle='-')
 
     else:
         plt.plot(x_list, y_list)
+
     plt.xscale('log')
     plt.yscale('log')
+    
     if settings:   
         grid=st.checkbox('see grid', key=p+7)
         if grid:
             plt.grid()
-    if spectrumv:
-        
-        x1=1e0
-        x2=1e24
-        y1=1e0
-        y2=1e24
-        plt.xlim(x1,x2)
-        plt.ylim(y1,y2)
+    plt.xlim(xo,xn)
+    plt.ylim(yo,yn)      
 
-    if spectrume:
-        x1=h*1e0/(1.60217663e-19*1e3)
-        x2=h*1e24/(1.60217663e-19*1e3)
-        y1=1e-4
-        y2=1e50
-        plt.xlim(x1,x2)
-        plt.ylim(y1,y2)
-    if spectrumf:
-        x1=1e-20
-        x2=1e13
-        y1=1e-40
-        y2=1e2
-        plt.xlim(x1,x2)
-        plt.ylim(y1,y2)
+
+
+
 
     if temperature==True:
         x1=0
@@ -221,13 +203,12 @@ def plot_log_scale(x_list, y_list,temperature=False,spectrumv=False,spectrumf=Fa
 
     p+=4
     if settings:
-       
-        set_range=st.checkbox("set x and y range",key=p+1)
+        set_range=st.checkbox("set x and y range",key=p+1,value=True)
         if set_range:
-            x1=st.number_input("lower limit of x", format="%e", value=x1)
-            x2=st.number_input("upper limit of x", format="%e", value=x2)
-            y1=st.number_input("lower limit of y", format="%e", value=y1)
-            y2=st.number_input("upper limit of y", format="%e", value=y2)
+            x1=st.number_input("lower limit of x", format="%e", value=xo)
+            x2=st.number_input("upper limit of x", format="%e", value=xn)
+            y1=st.number_input("lower limit of y", format="%e", value=yo)
+            y2=st.number_input("upper limit of y", format="%e", value=yn)
             plt.xlim(x1,x2)
             plt.ylim(y1,y2)
     # Add title and labels
@@ -244,6 +225,8 @@ def plot_log_scale(x_list, y_list,temperature=False,spectrumv=False,spectrumf=Fa
     else:
         st.pyplot(plt.gcf())
     savethegraph()
+
+#SIMPLER PLOTTER
 def plotit(x_list, y_list,xlabel='x',ylabel='y'):
     plt.figure()
     fig, ax = plt.subplots()
@@ -257,7 +240,7 @@ def plotit(x_list, y_list,xlabel='x',ylabel='y'):
     savethegraph()
     st.pyplot()
 
-
+#TO FIND INTENSITY
 def intensity(t):
     y=[]
     for v in frequencies:
@@ -265,7 +248,7 @@ def intensity(t):
         y.append(i)
     return y
 
-
+#FREQUENCY SPECTRUM RANGE
 def spectrum_category(frequency):
     
     if frequency < 3e9:  # Radio
@@ -283,6 +266,7 @@ def spectrum_category(frequency):
     elif 3e19 <= frequency:  # Gamma-ray
         return "Gamma-ray"
 
+#PATTERN OF 1,2,3...10,20,30...100,200,300... SO ON
 def generate_pattern(n):
     result = []
     current = 1
@@ -300,18 +284,21 @@ def generate_pattern(n):
         except:
             continue
     return result
+
 def savethegraph():
     return
     #name=st.text_input('enter file name')
     #if st.button('save'):
      #   plt.savefig(name)
       #  st.write(f'Graph saved as {name}')
+      
 def flux_density_nu(nu, T):
     numerator = 2 * h * nu**3 / c**2
     denominator = np.exp(h * nu / (k * T)) - 1
     return numerator / denominator
 
-#---------------------------------------------------------------------------------------------------------
+#-----------------------------------SECTION 4----------------------------------------------------------------------
+#TAKE INPUTS
 st.sidebar.markdown('# Input values')
 
 m_bh = st.sidebar.number_input("Mass of the black hole (solar masses)", value=1e8,format='%e')
@@ -327,8 +314,8 @@ r_i = r_i_rs * r_s
 # Input for r_o in units of r_s
 r_o_rs = st.sidebar.number_input("Value of r_o in units of Schwarzschild radius (r_s)", value=1e5,format='%e')
 r_o = r_o_rs * r_s
-# Calculate mass accretion rate
 
+# Calculate mass accretion rate
 def m_dotf(eddington_ratio,accretion_efficiency):
     return (eddington_ratio/accretion_efficiency) * (1.3e31 / c**2) * m_bh
 
@@ -378,8 +365,7 @@ st.sidebar.write(f" cos(i) = {cos_i}"
     r" :s "
     f"F2/F1={F2/F1:e}")
 
-#---------------------------------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------------------------------
+#----------------------------------SECTION 5-----------------------------------------------------------------------
 
 def the_R_vs_T_part(p):
     p+=1
@@ -437,6 +423,8 @@ def the_R_vs_T_part(p):
 
 def the_Frequency_vs_Luminosity_part2(p):
     global frequencies, luminosities
+    
+    #creating a list of frequencies based on large or small data option
     p+=1
     col1,col2,col3 = st.columns([0.2,0.1,1])
     with col1:
@@ -464,7 +452,8 @@ def the_Frequency_vs_Luminosity_part2(p):
                            list(np.linspace(3e12, 4.3e14,20))+ \
                            list(np.linspace(4.3e14, 7.5e14,20))+ \
                            list(np.linspace(7.5e14, 3e16,20)))
-                          
+
+    #finding corresponding luminosity density for selected frequency list                      
     luminosities=[]
     for i in frequencies:
         Lnew=luminosity2(i)
@@ -472,6 +461,9 @@ def the_Frequency_vs_Luminosity_part2(p):
             luminosities.append(Lnew)
         else:
             luminosities.append(0)
+
+    #writing formulas using latex
+            
     col1,col2=st.columns([2,1.5])
     with  col1:
         st.latex(r" \dot{M} = \frac {\epsilon} {\zeta} \frac {1.3 \times 10^{31}}{c^2} \frac{M_{\bullet}}{M_{\odot}} ")    
@@ -521,10 +513,13 @@ def the_Frequency_vs_Luminosity_part2(p):
             f"({c/7.5e14:.3e}, {c/3e16:.3e})",
             f"({c/3e16:.3e}, {c/3e19:.3e})",
             f"({c/3e19:.3e}, 0)"]}
-
         st.table(data)
-    L=integrate_curve(frequencies,luminosities,a=1e10,b=1e15) 
+
+    #integrating the luminosity density curve wuth respect to frequency to get Luminosity
+    L=integrate_curve(frequencies,luminosities,a=1e10,b=1e15)
     st.info(f"Bolometric Luminosity L = {L} Watts")
+
+    #integrating luminosity density for a fixed range of frequency
     if st.checkbox("For custom range of frequency",value=True):
         #snipped net luminosity
         col1,col2,col3,col4,col5 =st.columns([0.3,0.3,0.1,0.3,0.4])
@@ -571,14 +566,14 @@ def the_Frequency_vs_Luminosity_part2(p):
         df = df.applymap(lambda x: f'{x:.2e}' if isinstance(x, (int, float)) else x)
 
         st.table(df)
-    
+
+    #changing frequency to KeV and EL= frequency * luminosity density 
     energies=[h*v/(1.60217663e-19*1e3) for v in frequencies]
     EL=[e*v for e,v in zip(luminosities,frequencies)]    
     
     
     # Storing values of r and t together in R_vs_T
     dataset=pd.DataFrame({"frequency":frequencies,"Luminosity":luminosities})    
-    option = st.selectbox("Select:", ["1) the graph of (F vs L)?", "2) the slopes of (F vs L)?","3) the data table of f vs l"], key="{p}frequency_vs_luminosity")
 
     # Finding maximum and minimum temperatures
     try:
@@ -594,82 +589,130 @@ def the_Frequency_vs_Luminosity_part2(p):
         st.warning('there is some issue in calculating error')
 
 
-    if option == "1) the graph of (F vs L)?":
-        opts=st.checkbox('Other graphs',value=False)
+    opts=st.selectbox('Select graph',['frequency vs luminosity density',\
+                                      'Energy vs Energy flux','Energy vs flux',\
+                                      'frequency vs Energy flux'])
+    
+    
+    if opts=='frequency vs luminosity density':
+        xo=1e0 # default lower limit of x
+        xn=1e24# default upper limit of x
+        yo=1e0# default lower limit of y
+        yn=1e24# default upper limit of y
         
-        op1=True
-        if op1==True:
-            st.latex(r'\LARGE{\underline{\bold{L_\nu \ vs \  \nu}}}')
-            plot_log_scale(frequencies, luminosities,spectrumv=True,xlabel=r'$log(\nu) \ in \ Hz$',ylabel=r'$log(L_{\nu}) \ in \ W Hz^{-1}$')
-            st.info(r'Max $ L_\nu $ = ' + f'{lmax:e} '+ r' $W m^{-2} Hz^{-1}$' + f'observed in {spectrum_category(f_lmax)} region at ' +r'$ \nu $'+ f" = {f_lmax:.1e} Hz")
+        st.latex(r'\LARGE{\underline{\bold{L_\nu \ vs \  \nu}}}')
 
-            st.markdown('''<hr style="
-                    border: 0;
-                    border-top: 3px double white;
-                    background: white;
-                    margin: 20px 0;" />''', unsafe_allow_html=True)
-        if opts:
-            
-            #op1=st.checkbox(r'$ L_{\nu} \ vs \ \nu $',value=True)
-            op2=st.checkbox(r'$ EL_{E} \ vs \ E $',value=True)
-            op3=st.checkbox(r'$ EF_{E} \ vs \ E $',value=False)
-            if op2==True:
-                st.latex(r'\LARGE{\underline{\bold{EL_E \ vs \ E}}}')
-                plot_log_scale(energies, EL,spectrume=True, xlabel='log(E) in KeV',ylabel=r'$log(EL_E) \ in \ W $')
-                st.markdown('''<hr style="
-                        border: 0;
-                        border-top: 3px double white;
-                        background: white;
-                        margin: 20px 0;" />''', unsafe_allow_html=True)
-            if op3==True:
-                st.latex(r"F_E =\frac {L_E}{4 \pi d^2} \ where \ d \ is \ in \ meters")
-                dpsc=st.number_input('enter distance from source in parsecs',value=2.22e3,format='%e')
-                d=dpsc*3.0856776e16
-                cgs=st.checkbox('cgs unit',value=True)
-                EFE=[i/(4*pi*d**2) for i in EL]
-                if cgs:
-                    EFE_cgs=[i*1e3 for i in EFE]
-                    plot_log_scale(energies, EFE_cgs,spectrumf=True, xlabel='log(E) in KeV',ylabel=r'$log(EF_E) \ in \ erg \ s^{-1} \ cm^{-2} $')
-                if cgs==False:
-                    plot_log_scale(energies, EFE,spectrumf=True, xlabel='log(E) in KeV',ylabel=r'$log(EF_E) \ in \ J \ s^{-1} \ m^{-2} $')
-                st.markdown('''<hr style="
-                        border: 0;
-                        border-top: 3px double white;
-                        background: white;
-                        margin: 20px 0;" />''', unsafe_allow_html=True)
-            
-    # To find slopes
-    if option == "2) the slopes of (F vs L)?":
-        log_frequencies =[ np.log10(float(f)) for f in frequencies]
-        log_luminosities =[]
-        for lum in luminosities:
-            log_lum = np.log10(lum)
-            log_luminosities.append(log_lum)
+        plot_log_scale(frequencies, luminosities,xo,xn,yo,yn,spectrumv=True,xlabel=r'$log(\nu) \ in \ Hz$',ylabel=r'$log(L_{\nu}) \ in \ W Hz^{-1}$')
 
-        slopes = []
-        for i in range(len(frequencies) - 1):
-            slope = (log_luminosities[i + 1] - log_luminosities[i]) / (log_frequencies[i + 1] - log_frequencies[i])
-            slopes.append(slope)
-        slopes.append(np.nan)
-        d={'slope':slopes,'frequency':frequencies,'Luminosity':luminosities,\
-           'log(frequencies)':log_frequencies,\
-           'log(Luminosity)':log_luminosities}
-        
-        dataset=pd.DataFrame(d)
-        save_data(dataset)
-        if st.button("show data"):
-            format_str = '{:.2e}'
-            d_scientific = {key: [format_str.format(float(value)) for value in values] for key, values in dataset.items()}
-            st.table(d_scientific)    #to see data
-    if option =="3) the data table of f vs l":
+        st.info(r'Max $ L_\nu $ = ' + f'{lmax:e} '+ r' $W m^{-2} Hz^{-1}$' + f'observed in {spectrum_category(f_lmax)} region at ' +r'$ \nu $'+ f" = {f_lmax:.1e} Hz")
+
         data={"frequencies":frequencies,"luminosities":luminosities}
-        
         dataset=pd.DataFrame(data)
         for column in dataset.columns:
             dataset[column] = dataset[column].apply(lambda x: '{:.2e}'.format(x))
-            
+        st.dataframe(dataset, use_container_width=True)            
+
+        st.markdown('''<hr style="
+                border: 0;
+                border-top: 3px double white;
+                background: white;
+                margin: 20px 0;" />''', unsafe_allow_html=True)
+
+    if opts=='Energy vs Energy flux':
+        st.latex(r'\LARGE{\underline{\bold{EL_E \ vs \ E}}}')
+        xo=h*1e0/(1.60217663e-19*1e3)
+        xn=h*1e24/(1.60217663e-19*1e3)
+        yo=1e-4
+        yn=1e50
+        plot_log_scale(energies, EL,xo,xn,yo,yn,spectrume=True, xlabel='log(E) in KeV',ylabel=r'$log(EL_E) \ in \ W $')
+
+        data={"Energy":energies,"energy flux":EL}
+        dataset=pd.DataFrame(data)
+        for column in dataset.columns:
+            dataset[column] = dataset[column].apply(lambda x: '{:.2e}'.format(x))
         st.dataframe(dataset, use_container_width=True)
+
+        st.markdown('''<hr style="
+            border: 0;
+            border-top: 3px double white;
+            background: white;
+            margin: 20px 0;" />''', unsafe_allow_html=True)
+
+    if opts=='Energy vs flux':
+
+        
+        st.latex(r"F_E =\frac {L_E}{4 \pi d^2} \ where \ d \ is \ in \ meters")
+        
+        dpsc=st.number_input('enter distance from source in parsecs',value=2.22e3,format='%e')
+        d=dpsc*3.0856776e16 #changing distance to m
+        
+        cgs=st.checkbox('cgs unit',value=True)
+        EFE=[i/(4*pi*d**2) for i in EL]
+        if cgs:
+            xo=1e-20
+            xn=1e13
+            yo=1e-40
+            yn=1e2
+            EFE_cgs=[i*1e3 for i in EFE]
+            plot_log_scale(energies, EFE_cgs,xo,xn,yo,yn,spectrume=True, xlabel='log(E) in KeV',ylabel=r'$log(EF_E) \ in \ erg \ s^{-1} \ cm^{-2} $')
+            data={"Energy":energies,"Flux":EFE_cgs}
+            dataset=pd.DataFrame(data)
+            for column in dataset.columns:
+                dataset[column] = dataset[column].apply(lambda x: '{:.2e}'.format(x))
+            st.dataframe(dataset, use_container_width=True)
+
+        if cgs==False:
+            xo=1e-20
+            xn=1e13
+            yo=1e-40
+            yn=1e2
+            plot_log_scale(energies, EFE,xo,xn,yo,yn,spectrume=True, xlabel='log(E) in KeV',ylabel=r'$log(EF_E) \ in \ J \ s^{-1} \ m^{-2} $')
+            data={"Energy":energies,"Flux":EFE}
+            dataset=pd.DataFrame(data)
+            for column in dataset.columns:
+                dataset[column] = dataset[column].apply(lambda x: '{:.2e}'.format(x))
+            st.dataframe(dataset, use_container_width=True)
+
+        st.markdown('''<hr style="
+                border: 0;
+                border-top: 3px double white;
+                background: white;
+                margin: 20px 0;" />''', unsafe_allow_html=True)
+
+    
+    if opts=='frequency vs Energy flux':
+        xo=1e6
+        xn=1e20
+        yo=1e-30
+        yn=1e-9
+        st.latex(r"\nu L_\nu =\nu \frac {L_\nu}{4 \pi d^2} \ where \ d \ is \ in \ meters")
+        dpsc=st.number_input('enter distance from source in parsecs',value=1620.3e6,format='%e')
+        d=dpsc*3.0856776e16            
+        nuLnu=[nu*L/(4*pi*d**2) for nu,L in zip(frequencies,luminosities)]
+        plot_log_scale(frequencies, nuLnu,xo,xn,yo,yn,spectrumv=True, xlabel=r'$log(\nu) in Hz$',ylabel=r'$log(\nu L_{\nu}) (watts) $')
+
+        if st.checkbox("View data",key="data g4"):
+            data={r"frequencies (Hz)":frequencies,r"$\nu L_{\nu}":nuLnu}
             
+            dataset=pd.DataFrame(data)
+            for column in dataset.columns:
+                dataset[column] = dataset[column].apply(lambda x: '{:.2e}'.format(x))
+            
+            st.dataframe(dataset, use_container_width=True)
+
+        if st.checkbox("View data",key="data g5",value=True):
+            
+            freq_Ryd=[i/3.28984196e15 for  i in frequencies]
+            nuLnu_cgs =[i*1e3 for i in nuLnu]
+            data={r"frequencies (Hz)":freq_Ryd,r"$\nu L_{\nu}":nuLnu_cgs}
+            
+            dataset=pd.DataFrame(data)
+            for column in dataset.columns:
+                dataset[column] = dataset[column].apply(lambda x: '{:.2e}'.format(x))
+            
+            st.dataframe(dataset, use_container_width=True)
+
+
 #---------------------------------------------------------------------------------------------------------        
 def run(p):
     p+=1
@@ -819,3 +862,27 @@ if updt:
     version 7: added EL_E vs E graph and scaling + grid option :s
     version 6: added spectrum range colours
     """)
+#--------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------
+background_image = 'bg.png'  # Replace with your image URL or path
+
+# Add an opacity slider (ranging from 0 to 1)
+opacity = st.slider("Select Background Opacity", min_value=0.0, max_value=1.0, value=0.5, step=0.05)
+
+# Inject CSS to set the background image and apply the opacity
+st.markdown(
+    f"""
+    <style>
+    .main {{
+        background-image: url("{background_image}");
+        background-size: cover;  /* Makes the image cover the whole screen */
+        background-position: center center;  /* Centers the image */
+        background-repeat: no-repeat;  /* Ensures the image doesn't repeat */
+        height: 100vh;  /* Makes the image cover the full height of the viewport */
+        opacity: {opacity};  /* Apply opacity slider value */
+        position: fixed;  /* Fixes the background image position */
+        z-index: -1;  /* Ensures the image stays in the background */
+    }}
+    </style>
+    """, unsafe_allow_html=True
+)
