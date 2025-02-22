@@ -650,12 +650,13 @@ def the_Frequency_vs_Luminosity_part2(p):
         cgs=st.checkbox('cgs unit',value=True)
         EFE=[i/(4*pi*d**2) for i in EL]
         if cgs:
-            xo=1e-20
-            xn=1e13
+            xo=1e-17
+            xn=1e16
             yo=1e-40
             yn=1e2
             EFE_cgs=[i*1e3 for i in EFE]
-            plot_log_scale(energies, EFE_cgs,xo,xn,yo,yn,spectrume=True, xlabel='log(E) in KeV',ylabel=r'$log(EF_E) \ in \ erg \ s^{-1} \ cm^{-2} $')
+            energies_eV=[i*1e3 for i in energies]
+            plot_log_scale(energies_eV, EFE_cgs,xo,xn,yo,yn,spectrume=True, xlabel='log(E) in eV',ylabel=r'$log(EF_E) \ in \ erg \ s^{-1} \ cm^{-2} $')
             data={"Energy":energies,"Flux":EFE_cgs}
             dataset=pd.DataFrame(data)
             for column in dataset.columns:
