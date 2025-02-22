@@ -6,6 +6,33 @@ from tabulate import tabulate
 import pandas as pd
 import warnings
 import os
+#--------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------
+background_image = 'bg.png'  # Replace with your image URL or path
+
+# Add an opacity slider (ranging from 0 to 1)
+opacity = st.slider("Select Background Opacity", min_value=0.0, max_value=1.0, value=0.5, step=0.05)
+
+# Inject CSS to set the background image and apply the opacity
+st.markdown(
+    f"""
+    <style>
+    .main {{
+        background-image: url("{background_image}");
+        background-size: cover;  /* Makes the image cover the whole screen */
+        background-position: center center;  /* Centers the image */
+        background-repeat: no-repeat;  /* Ensures the image doesn't repeat */
+        height: 100vh;  /* Makes the image cover the full height of the viewport */
+        opacity: {opacity};  /* Apply opacity slider value */
+        position: fixed;  /* Fixes the background image position */
+        z-index: -1;  /* Ensures the image stays in the background */
+    }}
+    </style>
+    """, unsafe_allow_html=True
+)
+#--------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------
+
 #----------------------------------SECTION 1----------------------------------------------------------
 # Suppress all warnings
 st.set_option('deprecation.showPyplotGlobalUse', False) 
@@ -862,27 +889,3 @@ if updt:
     version 7: added EL_E vs E graph and scaling + grid option :s
     version 6: added spectrum range colours
     """)
-#--------------------------------------------------------------------------------------------------------
-#--------------------------------------------------------------------------------------------------------
-background_image = 'bg.png'  # Replace with your image URL or path
-
-# Add an opacity slider (ranging from 0 to 1)
-opacity = st.slider("Select Background Opacity", min_value=0.0, max_value=1.0, value=0.5, step=0.05)
-
-# Inject CSS to set the background image and apply the opacity
-st.markdown(
-    f"""
-    <style>
-    .main {{
-        background-image: url("{background_image}");
-        background-size: cover;  /* Makes the image cover the whole screen */
-        background-position: center center;  /* Centers the image */
-        background-repeat: no-repeat;  /* Ensures the image doesn't repeat */
-        height: 100vh;  /* Makes the image cover the full height of the viewport */
-        opacity: {opacity};  /* Apply opacity slider value */
-        position: fixed;  /* Fixes the background image position */
-        z-index: -1;  /* Ensures the image stays in the background */
-    }}
-    </style>
-    """, unsafe_allow_html=True
-)
