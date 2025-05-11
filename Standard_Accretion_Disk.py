@@ -1,4 +1,4 @@
-"version14"
+"version15"
 import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -13,7 +13,7 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 warnings.filterwarnings("ignore")
 
 #set version
-st.sidebar.info(" ## Version 14")
+st.sidebar.info(" ## Version 15")
 
 #----------------------------------SECTION 2----------------------------------------------------------
 
@@ -204,7 +204,7 @@ def plot_log_scale(x_list, y_list,xo,xn,yo,yn,temperature=False,spectrumv=False,
 
     p+=4
     if settings:
-        set_range=st.checkbox("set x and y range",key=p+1,value=True)
+        set_range=st.checkbox("set x and y range",key=p+1,value=False)
         if set_range:
             x1=st.number_input("lower limit of x", format="%e", value=xo)
             x2=st.number_input("upper limit of x", format="%e", value=xn)
@@ -589,11 +589,43 @@ def the_Frequency_vs_Luminosity_part2(p):
     except:
         st.warning('there is some issue in calculating error')
 
-
-    opts=st.selectbox('Select graph',['frequency vs luminosity density',\
+    st.header("SELECT OUTPUT FORMAT")
+    opts=st.selectbox('',['cloudy default units','frequency vs luminosity density',\
                                       'Energy vs Energy flux','Energy vs flux',\
                                       'frequency vs Energy flux'])
     
+    if opts=='cloudy default units':
+        xo=1e1
+        xn=1e20
+        yo=1e-30
+        yn=1e10
+        st.latex(r"\nu F_\nu =\nu \frac {L_\nu}{4 \pi d^2} \ where \ d \ is \ in \ meters")
+        dpsc=st.number_input('enter distance from source in parsecs',value=1,format='%e')
+        d=dpsc*3.0856776e16            
+        nuFnu=[nu*L/(4*pi*d**2) for nu,L in zip(frequencies,luminosities)]
+                 
+        freq_Ryd=[i/3.28984196e15 for  i in frequencies]
+        nuFnu_cgs =[i*1e3 for i in nuFnu]
+        
+        plot_log_scale(frequencies, nuFnu_cgs,xo,xn,yo,yn,spectrumv=True, xlabel=r'$log(\nu) in Hz$',ylabel=r'$log(\nu F_{\nu}) (erg/(s cm^2) $')
+        st.header("How to make datafile cloudy friendly")
+        col1,col2=st.columns([2,1])
+        with col1:
+            st.write("1. Download data file.")
+            st.write("2. Open in excel to remove first column of indexes")
+            st.write("3. After the first entry write nuFnu.")
+            st.write("4. Add 3 or more stars to mark end of file ***")
+        with col2:
+            st.write("example:")
+            st.write("#datafile"," \n"," 1.4 1e11 nuFnu"," \n","1.5 1e10")
+            st.text("... \n*************")
+ 
+        data={"log(freq) (Ryd)":np.log10(freq_Ryd),"nuFnu (erg/(s cm^2))":nuFnu_cgs}    
+        dataset=pd.DataFrame(data)
+        dataset["nuFnu (erg/(s cm^2))"] = dataset["nuFnu (erg/(s cm^2))"].apply(lambda x: '{:.2e}'.format(x))
+        st.dataframe(dataset, use_container_width=True)
+
+
     
     if opts=='frequency vs luminosity density':
         xo=1e0 # default lower limit of x
@@ -607,7 +639,7 @@ def the_Frequency_vs_Luminosity_part2(p):
 
         st.info(r'Max $ L_\nu $ = ' + f'{lmax:e} '+ r' $W m^{-2} Hz^{-1}$' + f'observed in {spectrum_category(f_lmax)} region at ' +r'$ \nu $'+ f" = {f_lmax:.1e} Hz")
 
-        data={"frequencies":frequencies,"luminosities":luminosities}
+        data={"frequencies (Hz)":frequencies,"luminosities (W/Hz)":luminosities}
         dataset=pd.DataFrame(data)
         for column in dataset.columns:
             dataset[column] = dataset[column].apply(lambda x: '{:.2e}'.format(x))
@@ -627,7 +659,7 @@ def the_Frequency_vs_Luminosity_part2(p):
         yn=1e50
         plot_log_scale(energies, EL,xo,xn,yo,yn,spectrume=True, xlabel='log(E) in KeV',ylabel=r'$log(EL_E) \ in \ W $')
 
-        data={"Energy":energies,"energy flux":EL}
+        data={"Energy (keV)":energies,"energy flux (W)":EL}
         dataset=pd.DataFrame(data)
         for column in dataset.columns:
             dataset[column] = dataset[column].apply(lambda x: '{:.2e}'.format(x))
@@ -657,7 +689,7 @@ def the_Frequency_vs_Luminosity_part2(p):
             EFE_cgs=[i*1e3 for i in EFE]
             energies_eV=[i*1e3 for i in energies]
             plot_log_scale(energies_eV, EFE_cgs,xo,xn,yo,yn,spectrume=True, xlabel='log(E) in eV',ylabel=r'$log(EF_E) \ in \ erg \ s^{-1} \ cm^{-2} $')
-            data={"Energy":energies,"Flux":EFE_cgs}
+            data={"Energy (eV)":energies_eV,"Flux (erg/(s cm^2))":EFE_cgs}
             dataset=pd.DataFrame(data)
             for column in dataset.columns:
                 dataset[column] = dataset[column].apply(lambda x: '{:.2e}'.format(x))
@@ -669,7 +701,7 @@ def the_Frequency_vs_Luminosity_part2(p):
             yo=1e-40
             yn=1e2
             plot_log_scale(energies, EFE,xo,xn,yo,yn,spectrume=True, xlabel='log(E) in KeV',ylabel=r'$log(EF_E) \ in \ J \ s^{-1} \ m^{-2} $')
-            data={"Energy":energies,"Flux":EFE}
+            data={"Energy (keV)":energies,"Flux (J/(s m^2))":EFE}
             dataset=pd.DataFrame(data)
             for column in dataset.columns:
                 dataset[column] = dataset[column].apply(lambda x: '{:.2e}'.format(x))
@@ -693,8 +725,8 @@ def the_Frequency_vs_Luminosity_part2(p):
         nuLnu=[nu*L/(4*pi*d**2) for nu,L in zip(frequencies,luminosities)]
         plot_log_scale(frequencies, nuLnu,xo,xn,yo,yn,spectrumv=True, xlabel=r'$log(\nu) in Hz$',ylabel=r'$log(\nu L_{\nu}) (watts) $')
 
-        if st.checkbox("View data",key="data g4"):
-            data={r"frequencies (Hz)":frequencies,r"$\nu L_{\nu}":nuLnu}
+        if st.checkbox("View data(Hz vs watts)",key="data g4"):
+            data={r"frequencies (Hz)":frequencies,r"$\nu L_{\nu} (W)":nuLnu}
             
             dataset=pd.DataFrame(data)
             for column in dataset.columns:
@@ -702,11 +734,11 @@ def the_Frequency_vs_Luminosity_part2(p):
             
             st.dataframe(dataset, use_container_width=True)
 
-        if st.checkbox("View data",key="data g5",value=True):
+        if st.checkbox("View data (Ryd vs erg/s)",key="data g5",value=True):
             
             freq_Ryd=[i/3.28984196e15 for  i in frequencies]
             nuLnu_cgs =[i*1e3 for i in nuLnu]
-            data={r"frequencies (Hz)":freq_Ryd,r"$\nu L_{\nu}":nuLnu_cgs}
+            data={r"frequencies (Hz)":freq_Ryd,r"$\nu L_{\nu} erg/s":nuLnu_cgs}
             
             dataset=pd.DataFrame(data)
             for column in dataset.columns:
@@ -855,6 +887,7 @@ st.markdown('''<hr style="
 updt=st.checkbox("Update details")
 if updt:
     st.write("""
+    version 15: added cloudy friendly data setup option 
     version 14: changed to multiple graph select box, removed the option to check slope, now need to define
                 x and y range in plotlogscale itself, bg colour selected based on spectrumv or spectrume
     version 13: Using symbols to show parameters + added m_dot equation + removed extra work  :s
