@@ -612,15 +612,15 @@ def the_Frequency_vs_Luminosity_part2(p):
         col1,col2=st.columns([2,1])
         with col1:
             st.write("1. Download data file.")
-            st.write("2. Open in excel to remove first column of indexes")
+            st.write("2. Open in excel to remove first column of indexes. keep one column of frequencies (Hz or Rydbergs)")
             st.write("3. After the first entry write nuFnu.")
             st.write("4. Add 3 or more stars to mark end of file ***")
         with col2:
             st.write("example:")
-            st.write("#datafile"," \n"," 1.4 1e11 nuFnu"," \n","1.5 1e10")
+            st.write("#datafile"," \n"," 1.4 1e11 nuFnu units Rydberg"," \n","1.5 1e10")
             st.text("... \n*************")
  
-        data={"log(freq) (Ryd)":np.log10(freq_Ryd),"nuFnu (erg/(s cm^2))":nuFnu_cgs}    
+        data={"log(freq) (Hz)":np.log10(frequencies),"log(freq) (Ryd)":np.log10(freq_Ryd),"nuFnu (erg/(s cm^2))":nuFnu_cgs}    
         dataset=pd.DataFrame(data)
         dataset["nuFnu (erg/(s cm^2))"] = dataset["nuFnu (erg/(s cm^2))"].apply(lambda x: '{:.2e}'.format(x))
         st.dataframe(dataset, use_container_width=True)
