@@ -614,7 +614,8 @@ def the_Frequency_vs_Luminosity_part2(p):
             st.write("1. Download data file.")
             st.write("2. Open in excel to remove first column of indexes. keep one column of frequencies (Hz or Rydbergs)")
             st.write("3. After the first entry write nuFnu.")
-            st.write("4. Add 3 or more stars to mark end of file ***")
+            st.write("4. Remove end values where flux in 0")
+            st.write("5. Add 3 or more stars to mark end of file ***")
         with col2:
             st.write("example:")
             st.write("#datafile"," \n"," 1.4 1e11 nuFnu units Rydberg"," \n","1.5 1e10")
