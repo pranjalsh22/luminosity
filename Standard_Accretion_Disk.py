@@ -620,7 +620,7 @@ def the_Frequency_vs_Luminosity_part2(p):
             st.write("#datafile"," \n"," 1.4 1e11 nuFnu units Rydberg"," \n","1.5 1e10")
             st.text("... \n*************")
  
-        data={"log(freq) (Hz)":frequencies,"log(freq) (Ryd)":np.log10(freq_Ryd),"nuFnu (erg/(s cm^2))":nuFnu_cgs}    
+        data={"log(freq) (Hz)":np.array(frequencies),"log(freq) (Ryd)":np.log10(freq_Ryd),"nuFnu (erg/(s cm^2))":nuFnu_cgs}    
         dataset=pd.DataFrame(data)
         dataset["nuFnu (erg/(s cm^2))"] = dataset["nuFnu (erg/(s cm^2))"].apply(lambda x: '{:.2e}'.format(x))
         st.dataframe(dataset, use_container_width=True)
