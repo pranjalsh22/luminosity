@@ -622,9 +622,11 @@ def the_Frequency_vs_Luminosity_part2(p):
             st.text("... \n*************")
         frequencies = np.array([float(f) for f in frequencies], dtype=float)    
         frequencies_log=np.log10(frequencies)
-        data={"log(freq) (Hz)":frequencies_log,"log(freq) (Ryd)":np.log10(freq_Ryd),"nuFnu (erg/(s cm^2))":nuFnu_cgs}    
+        data={"freq (Hz)":frequencies,"log(freq) (Hz)":frequencies_log,"freq (Ryd)":freq_Ryd,"log(freq) (Ryd)":np.log10(freq_Ryd),"nuFnu (erg/(s cm^2))":nuFnu_cgs}    
         dataset=pd.DataFrame(data)
         dataset["nuFnu (erg/(s cm^2))"] = dataset["nuFnu (erg/(s cm^2))"].apply(lambda x: '{:.2e}'.format(x))
+        dataset["freq (Hz)"] = dataset["freq (Hz)"].apply(lambda x: '{:.2e}'.format(x))
+        dataset["freq (Ryd)"] = dataset["freq (Ryd)"].apply(lambda x: '{:.2e}'.format(x))
         st.dataframe(dataset, use_container_width=True)
 
 
