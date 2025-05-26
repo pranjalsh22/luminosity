@@ -517,7 +517,7 @@ def the_Frequency_vs_Luminosity_part2(p):
 
     #integrating the luminosity density curve wuth respect to frequency to get Luminosity
     L=integrate_curve(frequencies,luminosities,a=1e10,b=1e15)
-    st.info(f"Bolometric Luminosity L = {L} Watts")
+    st.info(f"Bolometric Luminosity L = {L} Watts or {L*1e7} erg/s")
 
     #integrating luminosity density for a fixed range of frequency
     if st.checkbox("For custom range of frequency",value=True):
