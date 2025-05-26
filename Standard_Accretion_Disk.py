@@ -612,21 +612,22 @@ def the_Frequency_vs_Luminosity_part2(p):
         col1,col2=st.columns([2,1])
         with col1:
             st.write("1. Download data file.")
-            st.write("2. Open in excel to remove first column of indexes. keep one column of frequencies (Hz or Rydbergs)")
-            st.write("3. After the first entry write nuFnu.")
-            st.write("4. Remove end values where flux in 0")
+            st.write("2. Open in excel to remove first column of indexes. keep one column of frequencies (Rydbergs)")
+            st.write("3. After the first entry write nuFnu Linear units rydberg.")
+            st.write("4. Remove end values where flux in 0, and starting points at extremely low freq")
             st.write("5. Add 3 or more stars to mark end of file ***")
         with col2:
             st.write("example:")
-            st.write("#datafile"," \n"," 1.4 1e11 nuFnu units Rydberg"," \n","1.5 1e10")
+            st.write("#datafile"," \n"," 1.4 1e11 nuFnu linear units Rydberg"," \n","1.5 1e10")
             st.text("... \n*************")
         frequencies = np.array([float(f) for f in frequencies], dtype=float)    
-        frequencies_log=np.log10(frequencies)
-        data={"freq (Hz)":frequencies,"log(freq) (Hz)":frequencies_log,"freq (Ryd)":freq_Ryd,"log(freq) (Ryd)":np.log10(freq_Ryd),"nuFnu (erg/(s cm^2))":nuFnu_cgs}    
+        #frequencies_log=np.log10(frequencies)
+        #"freq (Hz)":frequencies,"log(freq) (Hz)":frequencies_log,"log(freq) (Ryd)":np.log10(freq_Ryd),
+        data={"freq (Ryd)":freq_Ryd,"nuFnu (erg/(s cm^2))":nuFnu_cgs}    
         dataset=pd.DataFrame(data)
-        dataset["nuFnu (erg/(s cm^2))"] = dataset["nuFnu (erg/(s cm^2))"].apply(lambda x: '{:.2e}'.format(x))
-        dataset["freq (Hz)"] = dataset["freq (Hz)"].apply(lambda x: '{:.2e}'.format(x))
-        dataset["freq (Ryd)"] = dataset["freq (Ryd)"].apply(lambda x: '{:.2e}'.format(x))
+        dataset["nuFnu (erg/(s cm^2))"] = dataset["nuFnu (erg/(s cm^2))"].apply(lambda x: '{:.6e}'.format(x))
+        #dataset["freq (Hz)"] = dataset["freq (Hz)"].apply(lambda x: '{:.2e}'.format(x))
+        dataset["freq (Ryd)"] = dataset["freq (Ryd)"].apply(lambda x: '{:.6e}'.format(x))
         st.dataframe(dataset, use_container_width=True)
 
 
