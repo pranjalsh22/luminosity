@@ -309,11 +309,11 @@ m_bh_kg = m_bh * m_sun_kg
 r_s = 2 * G * m_bh_kg / c ** 2
 
 # Input for r_i in units of r_s
-r_i_rs = st.sidebar.number_input("Value of r_i in units of Schwarzschild radius (r_s)", value=3e0,format='%e')
+r_i_rs = st.sidebar.number_input("Value of r_i in units of Schwarzschild radius (r_s)", value=100,format='%e')
 r_i = r_i_rs * r_s
 
 # Input for r_o in units of r_s
-r_o_rs = st.sidebar.number_input("Value of r_o in units of Schwarzschild radius (r_s)", value=1e5,format='%e')
+r_o_rs = st.sidebar.number_input("Value of r_o in units of Schwarzschild radius (r_s)", value=1e4,format='%e')
 r_o = r_o_rs * r_s
 
 # Calculate mass accretion rate
@@ -321,7 +321,7 @@ def m_dotf(eddington_ratio,accretion_efficiency):
     return (eddington_ratio/accretion_efficiency) * (1.3e31 / c**2) * m_bh
 
 
-choice=st.sidebar.selectbox('Define either ',['Accretion rate','Eddington ratio and accretion efficiency'])
+choice=st.sidebar.selectbox('Define either ',['Eddington ratio and accretion efficiency','Accretion rate'])
 
 if choice =='Accretion rate':
     mdot = st.sidebar.number_input("Accretion Rate in solar masses per year", format="%f", value=0.22960933114483387)
