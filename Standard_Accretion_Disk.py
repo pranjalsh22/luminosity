@@ -591,8 +591,32 @@ def the_Frequency_vs_Luminosity_part2(p):
     st.header("SELECT OUTPUT FORMAT")
     opts=st.selectbox('',['cloudy default units','frequency vs luminosity density',\
                                       'Energy vs Energy flux','Energy vs flux',\
-                                      'frequency vs Energy flux'])
-    
+                                      'frequency vs Energy flux','cloudy continuum output(Å vs eV)'])
+     
+    if opts=='cloudy continuum output(Å vs eV)':
+        xo=1e3
+        xn=1e4
+        yo=1e25
+        yn=1e45
+        dpsc=st.number_input('enter distance inner radius of cloud in cm (log10 value)',value=16.4894,format='%e')
+        d=dpsc*(1e-2)           
+        nuFnu=[nu*L/(4*pi*d**2) for nu,L in zip(frequencies,luminosities)]
+        wavelengths_A = [3e8 / i * 1e10 for i in frequencies]  # Hz -> Å
+        nuFnu_cgs =[i*1e3 for i in nuFnu]
+        
+        plot_log_scale(frequencies, nuFnu_cgs,xo,xn,yo,yn,spectrumv=True, xlabel=r'$log(wavelength(Å))$',ylabel=r'$log(\nu F_{\nu}) (erg/(s cm^2) $')
+        
+        #frequencies = np.array([float(f) for f in frequencies], dtype=float) hashed    
+        #frequencies_log=np.log10(frequencies)
+        #"freq (Hz)":frequencies,"log(freq) (Hz)":frequencies_log,"log(freq) (Ryd)":np.log10(freq_Ryd),
+        data={"wavelengths_A":wavelengths_A,"nuFnu (erg/(s cm^2))":nuFnu_cgs}    
+        dataset=pd.DataFrame(data)
+        dataset["nuFnu (erg/(s cm^2))"] = dataset["nuFnu (erg/(s cm^2))"].apply(lambda x: '{:.6e}'.format(x))
+        #dataset["freq (Hz)"] = dataset["freq (Hz)"].apply(lambda x: '{:.2e}'.format(x))
+        dataset["wavelengths_A"] = dataset["wavelengths_A"].apply(lambda x: '{:.6e}'.format(x))
+        st.dataframe(dataset, use_container_width=True)
+
+
     if opts=='cloudy default units':
         xo=1e1
         xn=1e20
