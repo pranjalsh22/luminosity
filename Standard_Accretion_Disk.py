@@ -604,7 +604,7 @@ def the_Frequency_vs_Luminosity_part2(p):
         wavelengths_A = [3e8 / i * 1e10 for i in frequencies]  # Hz -> Å
         nuFnu_cgs =[i*1e3 for i in nuFnu]
         
-        plot_log_scale(frequencies, nuFnu_cgs,xo,xn,yo,yn,spectrumv=True, xlabel=r'$log(wavelength(Å))$',ylabel=r'$log(\nu F_{\nu}) (erg/(s cm^2) $')
+        plot_log_scale(wavelengths_A, nuFnu_cgs,xo,xn,yo,yn,spectrume=True, xlabel=r'$log(wavelength(Å))$',ylabel=r'$log(\nu F_{\nu}) (erg/(s cm^2) $')
         
         #frequencies = np.array([float(f) for f in frequencies], dtype=float) hashed    
         #frequencies_log=np.log10(frequencies)
