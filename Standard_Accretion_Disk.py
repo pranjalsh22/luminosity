@@ -598,8 +598,9 @@ def the_Frequency_vs_Luminosity_part2(p):
         xn=1e4
         yo=1e25
         yn=1e45
-        dpsc=st.number_input('enter distance inner radius of cloud in cm (log10 value)',value=16.4894,format='%e')
-        d=dpsc*(1e-2)           
+        d_inp=st.number_input('enter distance inner radius of cloud in cm (log10 value)',value=16.4894,format='%e')
+        dist=10**d_inp
+        d=dist*(1e-2)           
         nuFnu=[nu*L/(4*pi*d**2) for nu,L in zip(frequencies,luminosities)]
         wavelengths_A = [3e8 / i * 1e10 for i in frequencies]  # Hz -> Å
         nuFnu_cgs =[i*1e3 for i in nuFnu]
