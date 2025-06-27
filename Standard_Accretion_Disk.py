@@ -602,19 +602,19 @@ def the_Frequency_vs_Luminosity_part2(p):
         dist=10**d_inp
         d=dist*(1e-2)           
         nuFnu=[nu*L/(4*pi*d**2) for nu,L in zip(frequencies,luminosities)]
-        wavelengths_A = [3e8 / i * 1e10 for i in frequencies]  # Hz -> Å
+        freq_eV = [i * 4.135667696e-15 for i in frequencies]  # Hz -> Å
         nuFnu_cgs =[i*1e3 for i in nuFnu]
         
-        plot_log_scale(wavelengths_A, nuFnu_cgs,xo,xn,yo,yn,spectrume=True, xlabel=r'$log(wavelength(Å))$',ylabel=r'$log(\nu F_{\nu}) (erg/(s cm^2) $')
+        plot_log_scale(freq_eV, nuFnu_cgs,xo,xn,yo,yn,spectrume=True, xlabel=r'$log(eV)$',ylabel=r'$log(\nu F_{\nu}) (erg/(s cm^2) $')
         
         #frequencies = np.array([float(f) for f in frequencies], dtype=float) hashed    
         #frequencies_log=np.log10(frequencies)
         #"freq (Hz)":frequencies,"log(freq) (Hz)":frequencies_log,"log(freq) (Ryd)":np.log10(freq_Ryd),
-        data={"wavelengths_A":wavelengths_A,"nuFnu (erg/(s cm^2))":nuFnu_cgs}    
+        data={"freq_eV":freq_eV,"nuFnu (erg/(s cm^2))":nuFnu_cgs}    
         dataset=pd.DataFrame(data)
         dataset["nuFnu (erg/(s cm^2))"] = dataset["nuFnu (erg/(s cm^2))"].apply(lambda x: '{:.6e}'.format(x))
         #dataset["freq (Hz)"] = dataset["freq (Hz)"].apply(lambda x: '{:.2e}'.format(x))
-        dataset["wavelengths_A"] = dataset["wavelengths_A"].apply(lambda x: '{:.6e}'.format(x))
+        dataset["freq_eV"] = dataset["freq_eV"].apply(lambda x: '{:.6e}'.format(x))
         st.dataframe(dataset, use_container_width=True)
 
 
