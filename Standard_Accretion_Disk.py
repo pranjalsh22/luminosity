@@ -629,7 +629,7 @@ def the_Frequency_vs_Luminosity_part2(p):
         nuFnu=[nu*L/(4*pi*d**2) for nu,L in zip(frequencies,luminosities)]
                  
         freq_Ryd=[i/3.28984196e15 for  i in frequencies]
-        nuFnu_cgs =[i*1e-7/(1e4) for i in nuFnu]
+        nuFnu_cgs =[i*1e3 for i in nuFnu]
         
         plot_log_scale(frequencies, nuFnu_cgs,xo,xn,yo,yn,spectrumv=True, xlabel=r'$log(\nu) in Hz$',ylabel=r'$log(\nu F_{\nu}) (erg/(s cm^2) $')
         st.header("How to make datafile cloudy friendly")
