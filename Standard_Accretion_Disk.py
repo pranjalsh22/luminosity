@@ -625,11 +625,11 @@ def the_Frequency_vs_Luminosity_part2(p):
         yn=1e10
         st.latex(r"\nu F_\nu =\nu \frac {L_\nu}{4 \pi d^2} \ where \ d \ is \ in \ meters")
         dpsc=st.number_input('enter distance from source in parsecs',value=1,format='%e')
-        d=dpsc*3.0856776e16            
+        d=dpsc*3.0856776e16 # 1 pc = 3.086e16 m and 3.086e18 cm           
         nuFnu=[nu*L/(4*pi*d**2) for nu,L in zip(frequencies,luminosities)]
                  
         freq_Ryd=[i/3.28984196e15 for  i in frequencies]
-        nuFnu_cgs =[i*1e3 for i in nuFnu]
+        nuFnu_cgs =[i*1e-7/(1e4) for i in nuFnu]
         
         plot_log_scale(frequencies, nuFnu_cgs,xo,xn,yo,yn,spectrumv=True, xlabel=r'$log(\nu) in Hz$',ylabel=r'$log(\nu F_{\nu}) (erg/(s cm^2) $')
         st.header("How to make datafile cloudy friendly")
