@@ -520,8 +520,8 @@ def the_Frequency_vs_Luminosity_part2(p):
     L_np=np.trapz(luminosities,frequencies)
     st.success(f"Bolometric Luminosity L = {L_np} Watts or {L_np*1e7} erg/s")
     st.success(f"Bolometric Luminosity log10(L) = {np.log10(L_np)} [Watts] or {np.log10(L_np*1e7)} [erg/s] ")
-    st.info(f"Bolometric Luminosity L = {L} Watts or {L*1e7} erg/s")
-    st.info(f"Bolometric Luminosity log10(L) = {np.log10(L)} [Watts] or {np.log10(L*1e7)} [erg/s] ")
+    #st.info(f"Bolometric Luminosity L = {L} Watts or {L*1e7} erg/s")
+    #st.info(f"Bolometric Luminosity log10(L) = {np.log10(L)} [Watts] or {np.log10(L*1e7)} [erg/s] ")
     #integrating luminosity density for a fixed range of frequency
     if st.checkbox("For custom range of frequency",value=True):
         #snipped net luminosity
