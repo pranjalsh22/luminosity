@@ -517,7 +517,7 @@ def the_Frequency_vs_Luminosity_part2(p):
 
     #integrating the luminosity density curve wuth respect to frequency to get Luminosity
     L=integrate_curve(frequencies,luminosities,a=1e10,b=1e15)
-    L_np=np.trapz(frequencies,luminosities)
+    L_np=np.trapz(luminosities,frequencies)
     st.success(f"Bolometric Luminosity L = {L_np} Watts or {L_np*1e7} erg/s")
     st.success(f"Bolometric Luminosity log10(L) = {np.log10(L_np)} [Watts] or {np.log10(L_np*1e7)} [erg/s] ")
     st.info(f"Bolometric Luminosity L = {L} Watts or {L*1e7} erg/s")
