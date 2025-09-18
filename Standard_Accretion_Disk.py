@@ -416,7 +416,7 @@ def the_R_vs_T_part(p):
 
     # Plotting the graph for radius vs temperature
     elif option == "graph of (R vs T) in logscale":
-        plot_log_scale(radii, temperatures,temperature=True,xlabel="log(radius) (Rs)",ylabel="log(temperature) (K)")
+        plot_log_scale(radii, temperatures,0,r_o_rs,tmin,tax,temperature=True,xlabel="log(radius) (Rs)",ylabel="log(temperature) (K)")
 
     elif option == "graph of (R vs T) without logscale":
         plotit(radii, temperatures,xlabel="Radius (Rs)",ylabel="Temperature  (K)")
