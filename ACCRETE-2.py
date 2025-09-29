@@ -445,9 +445,13 @@ def the_Frequency_vs_Luminosity_part2(p):
     else:
         frequencies1=sorted([10**n for n in range(1,23)]+ \
                            [2*10**n for n in range (0,22)]+ \
+                            [3*10**n for n in range (0,22)]+ \
                            [4*10**n for n in range (0,22)]+ \
+                            [5*10**n for n in range (0,22)]+ \
                            [6*10**n for n in range (0,22)]+ \
+                            [7*10**n for n in range (0,22)]+ \
                            [8*10**n for n in range (0,22)]+ \
+                            [9*10**n for n in range (0,22)]+ \
                            list(np.linspace(1e-5*F1,100*F2,40))+ \
                            list(np.linspace(3e12, 4.3e14,20))+ \
                            list(np.linspace(4.3e14, 7.5e14,20))+ \
