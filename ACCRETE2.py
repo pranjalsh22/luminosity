@@ -220,11 +220,7 @@ def plot_log_scale(x_list, y_list,xo,xn,yo,yn,temperature=False,spectrumv=False,
     ax.set_ylabel(ylabel)
     
     plt.legend()
-    st.pyplot(fig)
-    if interactive:
-        st.pyplot(plt.gcf(), clear_figure=True)
-    else:
-        st.pyplot(plt.gcf())
+    st.pyplot(plt.gcf(), clear_figure=True)
     savethegraph()
 
 #SIMPLER PLOTTER
