@@ -139,13 +139,13 @@ def plot_log_scale(x_list, y_list,xo,xn,yo,yn,temperature=False,spectrumv=False,
     
     if spectrumv:
         #fill bg
-        plt.fill_between(np.linspace(0,3e9,5),np.linspace(10**24,10**24,5),alpha=0.3,label='radio')
-        plt.fill_between(np.linspace(3e9,3e12,5),np.linspace(10**24,10**24,5),alpha=0.3,label='microwave')
-        plt.fill_between(np.linspace(3e12,2.99e14,5),np.linspace(10**24,10**24,5),alpha=0.3,label='infrared')
-        plt.fill_between(np.linspace(3.01e14,7.5e14,5),np.linspace(10**24,10**24,5),alpha=0.3,label='visible')
-        plt.fill_between(np.linspace(7.5e14,3e16,5),np.linspace(10**24,10**24,5),alpha=0.3,label='UV')
-        plt.fill_between(np.linspace(3e16,3e19,5),np.linspace(10**24,10**24,5),alpha=0.3,label='X-ray')
-        plt.fill_between(np.linspace(3e19,3e30,5),np.linspace(10**24,10**24,5),alpha=0.3,label='Gamma-ray')
+        plt.fill_between(np.linspace(0,3e9,5),np.linspace(1e24,1.1e24,5),alpha=0.3,label='radio')
+        plt.fill_between(np.linspace(3e9,3e12,5),np.linspace(1e24,1.1e24,5),alpha=0.3,label='microwave')
+        plt.fill_between(np.linspace(3e12,2.99e14,5),np.linspace(1e24,1.1e24,5),alpha=0.3,label='infrared')
+        plt.fill_between(np.linspace(3.01e14,7.5e14,5),np.linspace(1e24,1.1e24,5),alpha=0.3,label='visible')
+        plt.fill_between(np.linspace(7.5e14,3e16,5),np.linspace(1e24,1.1e24,5),alpha=0.3,label='UV')
+        plt.fill_between(np.linspace(3e16,3e19,5),np.linspace(1e24,1.1e24,5),alpha=0.3,label='X-ray')
+        plt.fill_between(np.linspace(3e19,3e30,5),np.linspace(1e24,1.1e24,5),alpha=0.3,label='Gamma-ray')
 
         #to show F1 and F2
         if settings==True:
@@ -228,7 +228,7 @@ def plotit(x_list, y_list,xlabel='x',ylabel='y'):
     plt.figure()
     fig, ax = plt.subplots()
     plt.plot(x_list, y_list)
-    # Add title and labels
+    # Add title and labels                 
     if xlabel=='x' or ylabel=='y':
         xlabel=name(x_values)
         ylabel=name(y_values)            
