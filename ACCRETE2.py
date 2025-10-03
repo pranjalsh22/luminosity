@@ -7,8 +7,8 @@ import pandas as pd
 import warnings
 import os
 
-a,b,c=st.columns(3,[1,2,1])
-with b:
+a1,a2,a3=st.columns(3,[1,2,1])
+with a2:
     st.header("----------ACCLUM-2.00-----------")
 #----------------------------------SECTION 1----------------------------------------------------------
 # Suppress all warnings
