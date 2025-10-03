@@ -6,7 +6,7 @@ from tabulate import tabulate
 import pandas as pd
 import warnings
 import os
-st.header("------------ACCRETE-1.00-------------")
+st.header("------------ACCLUM-1.00-------------")
 #----------------------------------SECTION 1----------------------------------------------------------
 # Suppress all warnings
 #st.set_option('deprecation.showPyplotGlobalUse', False) 
