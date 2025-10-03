@@ -165,7 +165,7 @@ def plot_log_scale(x_list, y_list,xo,xn,yo,yn,temperature=False,spectrumv=False,
         
         #show spectrum lines
         h1=h/(1.60217663e-19*1e+3)
-        plt.fill_between(np.linspace(0,h1*3e9,5),np.linspace(10**51,1.1e52,5),alpha=0.3,label='radio')
+        plt.fill_between(np.linspace(1,h1*3e9,5),np.linspace(10**51,1.1e52,5),alpha=0.3,label='radio')
         plt.fill_between(np.linspace(h1*3e9,h1*3e12,5),np.linspace(10**51,1.1e52,5),alpha=0.3,label='microwave')
         plt.fill_between(np.linspace(h1*3e12,h1*2.9999e14,5),np.linspace(10**51,1.1e52,5),alpha=0.3,label='infrared')
         plt.fill_between(np.linspace(h1*3.0001e14,h1*7.5e14,5),np.linspace(10**51,1.1e52,5),alpha=0.3,label='visible')
