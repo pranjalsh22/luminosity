@@ -6,7 +6,10 @@ from tabulate import tabulate
 import pandas as pd
 import warnings
 import os
-st.header("----------ACCLUM-2.00-----------")
+
+a,b,c=st.columns(3,[1,2,1])
+with b:
+    st.header("----------ACCLUM-2.00-----------")
 #----------------------------------SECTION 1----------------------------------------------------------
 # Suppress all warnings
 #st.set_option('deprecation.showPyplotGlobalUse', False) 
