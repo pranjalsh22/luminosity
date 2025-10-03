@@ -1,4 +1,4 @@
-"ACCRETE-2.00"
+
 import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -6,7 +6,7 @@ from tabulate import tabulate
 import pandas as pd
 import warnings
 import os
-
+st.header("----------ACCLUM-2.00-----------")
 #----------------------------------SECTION 1----------------------------------------------------------
 # Suppress all warnings
 #st.set_option('deprecation.showPyplotGlobalUse', False) 
