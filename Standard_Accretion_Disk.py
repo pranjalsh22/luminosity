@@ -136,16 +136,16 @@ def plot_log_scale(x_list, y_list,xo,xn,yo,yn,temperature=False,spectrumv=False,
     fig, ax = plt.subplots()
     p=np.random.randint(100)
     settings=st.checkbox("Graph settings",value=True,key=p*100)
-    
+      
     if spectrumv:
         #fill bg
-        plt.fill_between(np.linspace(0,3e9,5),np.linspace(10**24,10**24,5),alpha=0.3,label='radio')
-        plt.fill_between(np.linspace(3e9,3e12,5),np.linspace(10**24,10**24,5),alpha=0.3,label='microwave')
-        plt.fill_between(np.linspace(3e12,2.99e14,5),np.linspace(10**24,10**24,5),alpha=0.3,label='infrared')
-        plt.fill_between(np.linspace(3.01e14,7.5e14,5),np.linspace(10**24,10**24,5),alpha=0.3,label='visible')
-        plt.fill_between(np.linspace(7.5e14,3e16,5),np.linspace(10**24,10**24,5),alpha=0.3,label='UV')
-        plt.fill_between(np.linspace(3e16,3e19,5),np.linspace(10**24,10**24,5),alpha=0.3,label='X-ray')
-        plt.fill_between(np.linspace(3e19,3e30,5),np.linspace(10**24,10**24,5),alpha=0.3,label='Gamma-ray')
+        plt.fill_between(np.linspace(0,3e9,5),np.linspace(1e24,1.1e24,5),alpha=0.3,label='radio')
+        plt.fill_between(np.linspace(3e9,3e12,5),np.linspace(1e24,1.1e24,5),alpha=0.3,label='microwave')
+        plt.fill_between(np.linspace(3e12,2.99e14,5),np.linspace(1e24,1.1e24,5),alpha=0.3,label='infrared')
+        plt.fill_between(np.linspace(3.01e14,7.5e14,5),np.linspace(1e24,1.1e24,5),alpha=0.3,label='visible')
+        plt.fill_between(np.linspace(7.5e14,3e16,5),np.linspace(1e24,1.1e24,5),alpha=0.3,label='UV')
+        plt.fill_between(np.linspace(3e16,3e19,5),np.linspace(1e24,1.1e24,5),alpha=0.3,label='X-ray')
+        plt.fill_between(np.linspace(3e19,3e30,5),np.linspace(1e24,1.1e24,5),alpha=0.3,label='Gamma-ray')
 
         #to show F1 and F2
         if settings==True:
@@ -165,13 +165,13 @@ def plot_log_scale(x_list, y_list,xo,xn,yo,yn,temperature=False,spectrumv=False,
         
         #show spectrum lines
         h1=h/(1.60217663e-19*1e+3)
-        plt.fill_between(np.linspace(0,h1*3e9,5),np.linspace(10**51,10**51,5),alpha=0.3,label='radio')
-        plt.fill_between(np.linspace(h1*3e9,h1*3e12,5),np.linspace(10**51,10**51,5),alpha=0.3,label='microwave')
-        plt.fill_between(np.linspace(h1*3e12,h1*2.9999e14,5),np.linspace(10**51,10**51,5),alpha=0.3,label='infrared')
-        plt.fill_between(np.linspace(h1*3.0001e14,h1*7.5e14,5),np.linspace(10**51,10**51,5),alpha=0.3,label='visible')
-        plt.fill_between(np.linspace(h1*7.5e14,h1*3e16,5),np.linspace(10**51,10**51,5),alpha=0.3,label='UV')
-        plt.fill_between(np.linspace(h1*3e16,h1*3e19,5),np.linspace(10**51,10**51,5),alpha=0.3,label='X-ray')
-        plt.fill_between(np.linspace(h1*3e19,h1*3e30,5),np.linspace(10**51,10**51,5),alpha=0.3,label='Gamma-ray')
+        plt.fill_between(np.linspace(0,h1*3e9,5),np.linspace(1e52,1.1e52,5),alpha=0.3,label='radio')
+        plt.fill_between(np.linspace(h1*3e9,h1*3e12,5),np.linspace(1e52,1.1e52,5),alpha=0.3,label='microwave')
+        plt.fill_between(np.linspace(h1*3e12,h1*2.9999e14,5),np.linspace(1e52,1.1e52,5),alpha=0.3,label='infrared')
+        plt.fill_between(np.linspace(h1*3.0001e14,h1*7.5e14,5),np.linspace(1e52,1.1e52,5),alpha=0.3,label='visible')
+        plt.fill_between(np.linspace(h1*7.5e14,h1*3e16,5),np.linspace(1e52,1.1e52,5),alpha=0.3,label='UV')
+        plt.fill_between(np.linspace(h1*3e16,h1*3e19,5),np.linspace(1e52,1.1e52,5),alpha=0.3,label='X-ray')
+        plt.fill_between(np.linspace(h1*3e19,h1*3e34,5),np.linspace(1e52,1.1e52,5),alpha=0.3,label='Gamma-ray')
 
     if show_points:
         plt.scatter(x_list, y_list, marker='.', linestyle='-')
