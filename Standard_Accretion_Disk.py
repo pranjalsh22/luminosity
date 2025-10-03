@@ -9,7 +9,7 @@ import os
 
 #----------------------------------SECTION 1----------------------------------------------------------
 # Suppress all warnings
-st.set_option('deprecation.showPyplotGlobalUse', False) 
+#st.set_option('deprecation.showPyplotGlobalUse', False) 
 warnings.filterwarnings("ignore")
 
 #set version
