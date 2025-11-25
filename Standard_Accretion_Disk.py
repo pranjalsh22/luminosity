@@ -14,7 +14,8 @@ warnings.filterwarnings("ignore")
 
 #set version
 st.sidebar.info(" ## Version 15")
-st.sidebar.write("By Pranjal Sharma Under the guidance of Dr. C. Konar")
+st.sidebar.write("By Pranjal Sharma")
+st.sidebar.write("Under the guidance of Dr. C. Konar")
 #----------------------------------SECTION 2----------------------------------------------------------
 
 #constants
