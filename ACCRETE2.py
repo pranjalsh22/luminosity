@@ -694,7 +694,7 @@ def the_Frequency_vs_Luminosity_part2(p):
         st.header("Corona approximation : UV reduction by (1-f_c)")
         f_cor = st.number_input("input f_cor:",value=0.1)
         nuFnu_cgs_reduced = reduceUV(frequencies,nuFnu_cgs,f_cor)
-        data={"freq (Hz)":frequencies,"nuFnu reduced (erg/(s cm^2))":nuFnu_cgs_reduced}    
+        data={"freq (Ryd)":freq_Ryd,"nuFnu reduced (erg/(s cm^2))":nuFnu_cgs_reduced}    
         dataset=pd.DataFrame(data)
         st.dataframe(dataset, use_container_width=True)
 
