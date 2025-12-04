@@ -184,8 +184,12 @@ def plot_log_scale(x_list, y_list,xo,xn,yo,yn,temperature=False,spectrumv=False,
     plt.xscale('log')
     plt.yscale('log')
     
-    if settings:   
-        grid=st.checkbox('see grid', key=p+7)
+    if settings:
+        try:
+            grid=st.checkbox('see grid', key=p+7)
+        else:
+            p=p+2
+            grid=st.checkbox('see grid', key=p+7)
         if grid:
             plt.grid()
     plt.xlim(xo,xn)
