@@ -187,7 +187,7 @@ def plot_log_scale(x_list, y_list,xo,xn,yo,yn,temperature=False,spectrumv=False,
     if settings:
         try:
             grid=st.checkbox('see grid', key=p+7)
-        else:
+        except:
             p=p+2
             grid=st.checkbox('see grid', key=p+7)
         if grid:
