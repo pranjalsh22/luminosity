@@ -700,9 +700,9 @@ def the_Frequency_vs_Luminosity_part2(p):
 
         c1,c2=st.columns(2)
         with c1:
-            plot_log_scale(frequencies, nuFnu_cgs,xo,xn,yo,yn,spectrumv=True, xlabel=r'$log(\nu) in Hz$',ylabel=r'$log(\nu F_{\nu}) (erg/(s cm^2) $')
+            plot_log_scale(frequencies, nuFnu_cgs,1e13,1e16,yo,yn,spectrumv=True, xlabel=r'$log(\nu) in Hz$',ylabel=r'$log(\nu F_{\nu}) (erg/(s cm^2) $')
         with c2:
-            plot_log_scale(frequencies, nuFnu_cgs_reduced,xo,xn,yo,yn,spectrumv=True, xlabel=r'$log(\nu) in Hz$',ylabel=r'$log(\nu F_{\nu}) (erg/(s cm^2) $')
+            plot_log_scale(frequencies, nuFnu_cgs_reduced,1e13,1e16,yo,yn,spectrumv=True, xlabel=r'$log(\nu) in Hz$',ylabel=r'$log(\nu F_{\nu}) (erg/(s cm^2) $')
 
     
     if opts=='frequency vs luminosity density':
