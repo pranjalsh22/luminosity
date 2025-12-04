@@ -675,7 +675,7 @@ def the_Frequency_vs_Luminosity_part2(p):
         dataset["freq (Ryd)"] = dataset["freq (Ryd)"].apply(lambda x: '{:.6e}'.format(x))
         st.dataframe(dataset, use_container_width=True)
         comparison_data=st.checkbox("See comparison data")
-        if comparison_data=True:
+        if comparison_data==True:
             st.write("### DATAFILE for comparison")
             st.info(f"for distance {dpsc} parsec = {d} meters")
             data={"freq (Ryd)":freq_Ryd,"freq (Hz)":frequencies,"Lnu":luminosities,"nuFnu SI":nuFnu,"nuFnu (erg/(s cm^2))":nuFnu_cgs}    
