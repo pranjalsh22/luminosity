@@ -295,6 +295,22 @@ def flux_density_nu(nu, T):
     denominator = np.exp(h * nu / (k * T)) - 1
     return numerator / denominator
 
+def reduceUV(freq_hz, sed_y, f_cor):
+    # Hydrogen ionization threshold: 13.6 eV
+    h = 6.626e-27        # erg*s
+    eV = 1.602e-12       # erg
+    nu_ion = (13.6 * eV) / h
+
+    # Make a copy of the SED array
+    sed_new = np.array(sed_y, dtype=float)
+
+    # Identify UV/EUV region (hν > 13.6 eV)
+    uv_mask = freq_hz > nu_ion
+
+    # Apply reduction factor (1 - f_cor)
+    sed_new[uv_mask] *= (1.0 - f_cor)
+
+    return sed_new
 #-----------------------------------SECTION 4----------------------------------------------------------------------
 #TAKE INPUTS
 st.sidebar.markdown('# Input values')
@@ -658,21 +674,31 @@ def the_Frequency_vs_Luminosity_part2(p):
         #dataset["freq (Hz)"] = dataset["freq (Hz)"].apply(lambda x: '{:.2e}'.format(x))
         dataset["freq (Ryd)"] = dataset["freq (Ryd)"].apply(lambda x: '{:.6e}'.format(x))
         st.dataframe(dataset, use_container_width=True)
+        comparison_data=st.checkbox("See comparison data")
+        if comparison_data=True:
+            st.write("### DATAFILE for comparison")
+            st.info(f"for distance {dpsc} parsec = {d} meters")
+            data={"freq (Ryd)":freq_Ryd,"freq (Hz)":frequencies,"Lnu":luminosities,"nuFnu SI":nuFnu,"nuFnu (erg/(s cm^2))":nuFnu_cgs}    
+            dataset=pd.DataFrame(data)
+            dataset["nuFnu (erg/(s cm^2))"] = dataset["nuFnu (erg/(s cm^2))"].apply(lambda x: '{:.6e}'.format(x))
+            dataset["freq (Hz)"] = dataset["freq (Hz)"].apply(lambda x: '{:.2e}'.format(x))
+            dataset["freq (Ryd)"] = dataset["freq (Ryd)"].apply(lambda x: '{:.6e}'.format(x))
+            dataset["Lnu"] = dataset["Lnu"].apply(lambda x: '{:.6e}'.format(x))
+            dataset["nuFnu SI"] = dataset["nuFnu SI"].apply(lambda x: '{:.6e}'.format(x))
+            st.dataframe(dataset, use_container_width=True)
 
-        st.write("### DATAFILE for comparison")
-        st.info(f"for distance {dpsc} parsec = {d} meters")
-        data={"freq (Ryd)":freq_Ryd,"freq (Hz)":frequencies,"Lnu":luminosities,"nuFnu SI":nuFnu,"nuFnu (erg/(s cm^2))":nuFnu_cgs}    
+        st.header("Corona approximation : UV reduction by (1-f_c)")
+        f_cor = st.number_input("input f_cor:")
+        nuFnu_cgs_reduced = reduceUV(frequencies,nuFnu_cgs,f_cor)
+        data={"freq (Hz)":frequencies,"nuFnu orignal (erg/(s cm^2))":nuFnu_cgs,"nuFnu reduced (erg/(s cm^2))":nuFnu_cgs_reduced}    
         dataset=pd.DataFrame(data)
-        dataset["nuFnu (erg/(s cm^2))"] = dataset["nuFnu (erg/(s cm^2))"].apply(lambda x: '{:.6e}'.format(x))
-        dataset["freq (Hz)"] = dataset["freq (Hz)"].apply(lambda x: '{:.2e}'.format(x))
-        dataset["freq (Ryd)"] = dataset["freq (Ryd)"].apply(lambda x: '{:.6e}'.format(x))
-        dataset["Lnu"] = dataset["Lnu"].apply(lambda x: '{:.6e}'.format(x))
-        dataset["nuFnu SI"] = dataset["nuFnu SI"].apply(lambda x: '{:.6e}'.format(x))
         st.dataframe(dataset, use_container_width=True)
 
-
-    
-
+        c1,c2=st.columns(2)
+        with c1:
+            plot_log_scale(frequencies, nuFnu_cgs,xo,xn,yo,yn,spectrumv=True, xlabel=r'$log(\nu) in Hz$',ylabel=r'$log(\nu F_{\nu}) (erg/(s cm^2) $')
+        with c2:
+            plot_log_scale(frequencies, nuFnu_cgs_reduced,xo,xn,yo,yn,spectrumv=True, xlabel=r'$log(\nu) in Hz$',ylabel=r'$log(\nu F_{\nu}) (erg/(s cm^2) $')
 
     
     if opts=='frequency vs luminosity density':
