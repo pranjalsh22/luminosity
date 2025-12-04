@@ -149,7 +149,7 @@ def plot_log_scale(x_list, y_list,xo,xn,yo,yn,temperature=False,spectrumv=False,
         plt.fill_between(np.linspace(3e19,3e30,5),np.linspace(1e24,1.1e24,5),alpha=0.3,label='Gamma-ray')
 
         #to show F1 and F2
-        if settings==True:
+        if settings==False:
             F12=st.checkbox("show F1 and F2 (The point of change in slope of curve)",)
             if F12:
                 plt.plot([F1,F1],[0,10**24],label='F1')
