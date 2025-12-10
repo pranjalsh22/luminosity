@@ -593,7 +593,7 @@ def the_Frequency_vs_Luminosity_part2(p):
         st.warning('there is some issue in calculating error')
 
     st.header("SELECT OUTPUT FORMAT")
-    opts=st.selectbox('',['cloudy default units','frequency vs luminosity density',\
+    opts=st.selectbox('',['cloudy default units','frequency vs nuLnu',\
                                       'Energy vs Energy flux','Energy vs flux',\
                                       'frequency vs Energy flux','cloudy continuum output(Å vs eV)'])
      
