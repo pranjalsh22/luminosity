@@ -683,7 +683,7 @@ def the_Frequency_vs_Luminosity_part2(p):
         
         st.latex(r'\LARGE{\underline{\bold{L_\nu \ vs \  \nu}}}')
         nuLnu=[nu*L for nu,L in zip(frequencies,luminosities)]
-        plot_log_scale(frequencies, nuLnu,xo,xn,yo,yn,spectrumv=True,xlabel=r'$log(\nu) \ in \ Hz$',ylabel=r'$\nulog(L_{\nu}) \ in \ W $')
+        plot_log_scale(frequencies, nuLnu,xo,xn,yo,yn,spectrumv=True,xlabel=r'$log(\nu) \ in \ Hz$',ylabel=r'${\nu}log(L_{\nu}) \ in \ W $')
 
         st.info(r'Max $ L_\nu $ = ' + f'{lmax:e} '+ r' $W m^{-2} Hz^{-1}$' + f'observed in {spectrum_category(f_lmax)} region at ' +r'$ \nu $'+ f" = {f_lmax:.1e} Hz")
 
