@@ -675,19 +675,19 @@ def the_Frequency_vs_Luminosity_part2(p):
 
 
     
-    if opts=='frequency vs luminosity density':
+    if opts=='frequency vs nuLnu':
         xo=1e0 # default lower limit of x
         xn=1e24# default upper limit of x
         yo=1e0# default lower limit of y
         yn=1e24# default upper limit of y
         
         st.latex(r'\LARGE{\underline{\bold{L_\nu \ vs \  \nu}}}')
-
-        plot_log_scale(frequencies, luminosities,xo,xn,yo,yn,spectrumv=True,xlabel=r'$log(\nu) \ in \ Hz$',ylabel=r'$log(L_{\nu}) \ in \ W Hz^{-1}$')
+        nuLnu=[nu*L for nu,L in zip(frequencies,luminosities)]
+        plot_log_scale(frequencies, nuLnu,xo,xn,yo,yn,spectrumv=True,xlabel=r'$log(\nu) \ in \ Hz$',ylabel=r'$log(L_{\nu}) \ in \ W Hz^{-1}$')
 
         st.info(r'Max $ L_\nu $ = ' + f'{lmax:e} '+ r' $W m^{-2} Hz^{-1}$' + f'observed in {spectrum_category(f_lmax)} region at ' +r'$ \nu $'+ f" = {f_lmax:.1e} Hz")
 
-        data={"frequencies (Hz)":frequencies,"luminosities (W/Hz)":luminosities}
+        data={"frequencies (Hz)":frequencies,"nuLnu":nuLnu}
         dataset=pd.DataFrame(data)
         for column in dataset.columns:
             dataset[column] = dataset[column].apply(lambda x: '{:.2e}'.format(x))
@@ -767,14 +767,14 @@ def the_Frequency_vs_Luminosity_part2(p):
         xn=1e20
         yo=1e-30
         yn=1e-9
-        st.latex(r"\nu L_\nu =\nu \frac {L_\nu}{4 \pi d^2} \ where \ d \ is \ in \ meters")
+        st.latex(r"\nu F_\nu =\nu \frac {L_\nu}{4 \pi d^2} \ where \ d \ is \ in \ meters")
         dpsc=st.number_input('enter distance from source in parsecs',value=1620.3e6,format='%e')
         d=dpsc*3.0856776e16            
-        nuLnu=[nu*L/(4*pi*d**2) for nu,L in zip(frequencies,luminosities)]
-        plot_log_scale(frequencies, nuLnu,xo,xn,yo,yn,spectrumv=True, xlabel=r'$log(\nu) in Hz$',ylabel=r'$log(\nu L_{\nu}) (watts) $')
+        nuFnu=[nu*L/(4*pi*d**2) for nu,L in zip(frequencies,luminosities)]
+        plot_log_scale(frequencies, nuFnu,xo,xn,yo,yn,spectrumv=True, xlabel=r'$log(\nu) in Hz$',ylabel=r'$log(\nu L_{\nu}) (watts) $')
 
         if st.checkbox("View data(Hz vs watts)",key="data g4"):
-            data={r"frequencies (Hz)":frequencies,r"$\nu L_{\nu} (W)":nuLnu}
+            data={r"frequencies (Hz)":frequencies,r"$\nu F_{\nu} (W)":nuFnu}
             
             dataset=pd.DataFrame(data)
             for column in dataset.columns:
@@ -786,7 +786,7 @@ def the_Frequency_vs_Luminosity_part2(p):
             
             freq_Ryd=[i/3.28984196e15 for  i in frequencies]
             nuLnu_cgs =[i*1e3 for i in nuLnu]
-            data={r"frequencies (Hz)":freq_Ryd,r"$\nu L_{\nu} erg/s":nuLnu_cgs}
+            data={r"frequencies (Hz)":freq_Ryd,r"$\nu F_{\nu} erg/s":nuFnu_cgs}
             
             dataset=pd.DataFrame(data)
             for column in dataset.columns:
