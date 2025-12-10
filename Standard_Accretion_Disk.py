@@ -676,11 +676,11 @@ def the_Frequency_vs_Luminosity_part2(p):
 
     
     if opts=='frequency vs nuLnu':
-        xo=1e12 # default lower limit of x
-        xn=1e46# default upper limit of x
-        yo=1e0# default lower limit of y
-        yn=1e24# default upper limit of y
-        
+        xo=1e1
+        xn=1e20
+        yo=1e12 
+        yn=1e46
+       
         st.latex(r'\LARGE{\underline{\bold{L_\nu \ vs \  \nu}}}')
         nuLnu=[nu*L for nu,L in zip(frequencies,luminosities)]
         plot_log_scale(frequencies, nuLnu,xo,xn,yo,yn,spectrumv=True,xlabel=r'$log(\nu) \ in \ Hz$',ylabel=r'${\nu}log(L_{\nu}) \ in \ W $')
