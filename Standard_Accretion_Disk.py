@@ -683,11 +683,11 @@ def the_Frequency_vs_Luminosity_part2(p):
         
         st.latex(r'\LARGE{\underline{\bold{L_\nu \ vs \  \nu}}}')
         nuLnu=[nu*L for nu,L in zip(frequencies,luminosities)]
-        plot_log_scale(frequencies, nuLnu,xo,xn,yo,yn,spectrumv=True,xlabel=r'$log(\nu) \ in \ Hz$',ylabel=r'$\nulog(L_{\nu}) \ in \ W Hz^{-1}$')
+        plot_log_scale(frequencies, nuLnu,xo,xn,yo,yn,spectrumv=True,xlabel=r'$log(\nu) \ in \ Hz$',ylabel=r'$\nulog(L_{\nu}) \ in \ W $')
 
         st.info(r'Max $ L_\nu $ = ' + f'{lmax:e} '+ r' $W m^{-2} Hz^{-1}$' + f'observed in {spectrum_category(f_lmax)} region at ' +r'$ \nu $'+ f" = {f_lmax:.1e} Hz")
 
-        data={"frequencies (Hz)":frequencies,"nuLnu":nuLnu}
+        data={"frequencies (Hz)":frequencies,"nuLnu watts":nuLnu}
         dataset=pd.DataFrame(data)
         for column in dataset.columns:
             dataset[column] = dataset[column].apply(lambda x: '{:.2e}'.format(x))
