@@ -13,7 +13,7 @@ st.header("------------ACCLUM-1.00-------------")
 warnings.filterwarnings("ignore")
 
 #set version
-st.sidebar.info(" ## Version 15")
+st.sidebar.info(" ## Version 16")
 st.sidebar.write("Developed by Pranjal Sharma")
 st.sidebar.write("Under the guidance of Dr. C. Konar")
 #----------------------------------SECTION 2----------------------------------------------------------
