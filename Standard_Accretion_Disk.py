@@ -302,13 +302,8 @@ def flux_density_nu(nu, T):
     return numerator / denominator
 
 
-
-def create_cloudy_sed(
-    ryd_list,
-    nufnu_list,
-    filename="my_sed.txt"
-):
-    if len(ryd_list) != len(nufnu_list):
+def create_cloudy_sed(ryd_list,nuLnu_list,filename="my_sed.txt"):
+    if len(ryd_list) != len(nuLnu_list):
         st.error("Energy list and flux list must have the same length.")
         return
 
@@ -316,11 +311,14 @@ def create_cloudy_sed(
         st.error("Input lists are empty.")
         return
 
-    combined = sorted(zip(ryd_list, nufnu_list), key=lambda x: x[0])
+    combined = sorted(zip(ryd_list, nuLnu_list), key=lambda x: x[0])
 
     buffer = BytesIO()
-    for ryd, flux in combined:
-        line = f"{ryd:.6e}  {flux:.6e}\n"
+
+    buffer.write(b"#freq(ryd)  nuLnu\n")
+
+    for ryd, nuLnu in combined:
+        line = f"{ryd:.6e}  {nuLnu:.6e}\n"
         buffer.write(line.encode("ascii"))
 
     file_content = buffer.getvalue()
