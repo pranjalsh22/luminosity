@@ -665,7 +665,7 @@ def the_Frequency_vs_Luminosity_part2(p):
         with col1:
             st.header("CloudyOnline:")
             st.write("Download the datafile and upload in the sidebar of CloudyOnline to use as SED")
-            st.link("CloudyOnline","https://cloudyonline.streamlit.app")
+            st.markdown("[CloudyOnline](https://cloudyonline.streamlit.app)")
         frequencies = np.array([float(f) for f in frequencies], dtype=float)    
         #frequencies_log=np.log10(frequencies)
         #"freq (Hz)":frequencies,"log(freq) (Hz)":frequencies_log,"log(freq) (Ryd)":np.log10(freq_Ryd),
