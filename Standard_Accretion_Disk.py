@@ -299,6 +299,25 @@ def flux_density_nu(nu, T):
     denominator = np.exp(h * nu / (k * T)) - 1
     return numerator / denominator
 
+def create_cloudy_sed(ryd_list, nufnu_list, filename="my_sed.txt"):
+    if len(ryd_list) != len(nufnu_list):
+        return "Error: The Energy list and Flux list must have the same length."
+    
+    combined = sorted(zip(ryd_list, nufnu_list), key=lambda x: x[0])
+    try:
+        with open(filename, "w", encoding="ascii") as f:
+            for ryd, flux in combined:
+                f.write(f"{ryd:.6e}  {flux:.6e}\n")
+                
+        print(f"✅ Success! File '{filename}' created.")
+        print(f"   - Points written: {len(combined)}")
+        print(f"   - Energy Range: {combined[0][0]:.4e} to {combined[-1][0]:.4e} Ryd")
+        return filename
+
+    except Exception as e:
+        return f"Error writing file: {str(e)}"
+
+
 #-----------------------------------SECTION 4----------------------------------------------------------------------
 #TAKE INPUTS
 st.sidebar.markdown('# Input values')
@@ -597,29 +616,6 @@ def the_Frequency_vs_Luminosity_part2(p):
                                       'Energy vs Energy flux','Energy vs flux',\
                                       'frequency vs Energy flux','cloudy continuum output(Å vs eV)'])
      
-    if opts=='cloudy continuum output(Å vs eV)':
-        xo=1e3
-        xn=1e4
-        yo=1e25
-        yn=1e45
-        d_inp=st.number_input('enter distance inner radius of cloud in cm (log10 value)',value=16.4894,format='%e')
-        dist=10**d_inp
-        d=dist*(1e-2)           
-        nuFnu=[nu*L/(4*pi*d**2) for nu,L in zip(frequencies,luminosities)]
-        freq_eV = [i * 4.135667696e-15 for i in frequencies]  # Hz -> Å
-        nuFnu_cgs =[i*1e3 for i in nuFnu]
-        
-        plot_log_scale(freq_eV, nuFnu_cgs,xo,xn,yo,yn,spectrume=True, xlabel=r'$log(eV)$',ylabel=r'$log(\nu F_{\nu}) (erg/(s cm^2) $')
-        
-        #frequencies = np.array([float(f) for f in frequencies], dtype=float) hashed    
-        #frequencies_log=np.log10(frequencies)
-        #"freq (Hz)":frequencies,"log(freq) (Hz)":frequencies_log,"log(freq) (Ryd)":np.log10(freq_Ryd),
-        data={"freq_eV":freq_eV,"nuFnu (erg/(s cm^2))":nuFnu_cgs}    
-        dataset=pd.DataFrame(data)
-        dataset["nuFnu (erg/(s cm^2))"] = dataset["nuFnu (erg/(s cm^2))"].apply(lambda x: '{:.6e}'.format(x))
-        #dataset["freq (Hz)"] = dataset["freq (Hz)"].apply(lambda x: '{:.2e}'.format(x))
-        dataset["freq_eV"] = dataset["freq_eV"].apply(lambda x: '{:.6e}'.format(x))
-        st.dataframe(dataset, use_container_width=True)
 
 
     if opts=='cloudy default units':
@@ -627,54 +623,40 @@ def the_Frequency_vs_Luminosity_part2(p):
         xn=1e20
         yo=1e-30
         yn=1e10
-        st.latex(r"\nu F_\nu =\nu \frac {L_\nu}{4 \pi d^2} \ where \ d \ is \ in \ meters")
-        dpsc=st.number_input('enter distance from source in parsecs',value=1,format='%e')
-        d=dpsc*3.0856776e16 # 1 pc = 3.086e16 m and 3.086e18 cm           
-        nuFnu=[nu*L/(4*pi*d**2) for nu,L in zip(frequencies,luminosities)]
+        
+        nuLnu=[nu*L for nu,L in zip(frequencies,luminosities)]
                  
         freq_Ryd=[i/3.28984196e15 for  i in frequencies]
-        nuFnu_cgs =[i*1e3 for i in nuFnu]
+        nuLnu_cgs =[i*1e7 for i in nuFnu]
         
-        plot_log_scale(frequencies, nuFnu_cgs,xo,xn,yo,yn,spectrumv=True, xlabel=r'$log(\nu) in Hz$',ylabel=r'$log(\nu F_{\nu}) (erg/(s cm^2) $')
+        plot_log_scale(frequencies, nuLnu_cgs,xo,xn,yo,yn,spectrumv=True, xlabel=r'$log(\nu) in Hz$',ylabel=r'$log(\nu F_{\nu}) (erg/s)')
         st.header("How to make datafile cloudy friendly")
         col1,col2=st.columns([2,1])
         with col1:
             st.write("1. Download data file.")
             st.write("2. Open in excel to remove first column of indexes. keep one column of frequencies (Rydbergs)")
-            st.write("3. After the first entry write nuFnu Linear units rydberg.")
-            st.write("4. Remove end values where flux in 0, and starting points at extremely low freq")
+            st.write("3. After the first entry write nuLnu Linear units rydberg.")
+            st.write("4. Remove end values where flux is 0, and starting points at extremely low freq")
             st.write("5. Add 3 or more stars to mark end of file ***")
         with col2:
             st.write("example:")
-            st.write("#datafile"," \n"," 1.4 1e11 nuFnu linear units Rydberg"," \n","1.5 1e10")
+            st.write("#datafile"," \n"," 1.4 1e11 nuLnu linear units Rydberg"," \n","1.5 1e10")
             st.text("... \n*************")
         frequencies = np.array([float(f) for f in frequencies], dtype=float)    
         #frequencies_log=np.log10(frequencies)
         #"freq (Hz)":frequencies,"log(freq) (Hz)":frequencies_log,"log(freq) (Ryd)":np.log10(freq_Ryd),
+        create_cloudy_sed(freq_Ryd, nuLnu_cgs, filename="xex_mbh")
+
         st.write("### DATAFILE")
-        data={"freq (Ryd)":freq_Ryd,"nuFnu (erg/(s cm^2))":nuFnu_cgs}    
+        data={"freq (Ryd)":freq_Ryd,"nuLnu (erg/s)":nuLnu_cgs}    
         dataset=pd.DataFrame(data)
-        dataset["nuFnu (erg/(s cm^2))"] = dataset["nuFnu (erg/(s cm^2))"].apply(lambda x: '{:.6e}'.format(x))
+        dataset["nuLnu (erg/s)"] = dataset["nuLnu (erg/s)"].apply(lambda x: '{:.6e}'.format(x))
         #dataset["freq (Hz)"] = dataset["freq (Hz)"].apply(lambda x: '{:.2e}'.format(x))
         dataset["freq (Ryd)"] = dataset["freq (Ryd)"].apply(lambda x: '{:.6e}'.format(x))
         st.dataframe(dataset, use_container_width=True)
-
-        st.write("### DATAFILE for comparison")
-        st.info(f"for distance {dpsc} parsec = {d} meters")
-        data={"freq (Ryd)":freq_Ryd,"freq (Hz)":frequencies,"Lnu":luminosities,"nuFnu SI":nuFnu,"nuFnu (erg/(s cm^2))":nuFnu_cgs}    
-        dataset=pd.DataFrame(data)
-        dataset["nuFnu (erg/(s cm^2))"] = dataset["nuFnu (erg/(s cm^2))"].apply(lambda x: '{:.6e}'.format(x))
-        dataset["freq (Hz)"] = dataset["freq (Hz)"].apply(lambda x: '{:.2e}'.format(x))
-        dataset["freq (Ryd)"] = dataset["freq (Ryd)"].apply(lambda x: '{:.6e}'.format(x))
-        dataset["Lnu"] = dataset["Lnu"].apply(lambda x: '{:.6e}'.format(x))
-        dataset["nuFnu SI"] = dataset["nuFnu SI"].apply(lambda x: '{:.6e}'.format(x))
-        st.dataframe(dataset, use_container_width=True)
-
-
-    
-
-
-    
+       
+        
+       
     if opts=='frequency vs nuLnu':
         xo=1e1
         xn=1e20
