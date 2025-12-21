@@ -1,4 +1,4 @@
-"version16"
+"version17"
 import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -653,21 +653,21 @@ def the_Frequency_vs_Luminosity_part2(p):
         plot_log_scale(frequencies, nuLnu_cgs,xo,xn,yo,yn,spectrumv=True, xlabel=r'$log(\nu) in Hz$',ylabel=r'$log(\nu L_{\nu}) (erg/s)')
         st.header("How to make datafile cloudy friendly")
         col1,col2=st.columns([2,1])
-        with col1:
+        with col2:
             st.write("1. Download data file.")
             st.write("2. Open in excel to remove first column of indexes. keep one column of frequencies (Rydbergs)")
             st.write("3. After the first entry write nuLnu Linear units rydberg.")
             st.write("4. Remove end values where flux is 0, and starting points at extremely low freq")
             st.write("5. Add 3 or more stars to mark end of file ***")
-        with col2:
-            st.write("example:")
-            st.write("#datafile"," \n"," 1.4 1e11 nuLnu linear units Rydberg"," \n","1.5 1e10")
-            st.text("... \n*************")
+        with col1:
+            st.header("CloudyOnline:")
+            st.write("Download the datafile and upload in the sidebar of CloudyOnline to use as SED")
+        
         frequencies = np.array([float(f) for f in frequencies], dtype=float)    
         #frequencies_log=np.log10(frequencies)
         #"freq (Hz)":frequencies,"log(freq) (Hz)":frequencies_log,"log(freq) (Ryd)":np.log10(freq_Ryd),
         create_cloudy_sed(freq_Ryd, nuLnu_cgs, filename="xex_mbh")
-
+        st.write("LINK TO CLOUDY ONLINE AT THE BOTTOM OF THE PAGE")
         st.write("### DATAFILE")
         data={"freq (Ryd)":freq_Ryd,"nuLnu (erg/s)":nuLnu_cgs}    
         dataset=pd.DataFrame(data)
@@ -955,6 +955,8 @@ for i, app in enumerate(apps):
 updt=st.checkbox("Update details")
 if updt:
     st.write("""
+    version 17: added downloadable file to use in CloudyOnline
+    version 16: added instructions to use it in cloudy 
     version 15: added cloudy friendly data setup option 
     version 14: changed to multiple graph select box, removed the option to check slope, now need to define
                 x and y range in plotlogscale itself, bg colour selected based on spectrumv or spectrume
