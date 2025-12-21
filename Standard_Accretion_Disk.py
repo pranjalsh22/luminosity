@@ -299,23 +299,38 @@ def flux_density_nu(nu, T):
     denominator = np.exp(h * nu / (k * T)) - 1
     return numerator / denominator
 
-def create_cloudy_sed(ryd_list, nufnu_list, filename="my_sed.txt"):
-    if len(ryd_list) != len(nufnu_list):
-        return "Error: The Energy list and Flux list must have the same length."
-    
-    combined = sorted(zip(ryd_list, nufnu_list), key=lambda x: x[0])
-    try:
-        with open(filename, "w", encoding="ascii") as f:
-            for ryd, flux in combined:
-                f.write(f"{ryd:.6e}  {flux:.6e}\n")
-                
-        print(f"✅ Success! File '{filename}' created.")
-        print(f"   - Points written: {len(combined)}")
-        print(f"   - Energy Range: {combined[0][0]:.4e} to {combined[-1][0]:.4e} Ryd")
-        return filename
 
-    except Exception as e:
-        return f"Error writing file: {str(e)}"
+def create_cloudy_sed_streamlit(ryd_list,nufnu_list,filename="my_sed.txt"):
+    if len(ryd_list) != len(nufnu_list):
+        st.error("Energy list and flux list must have the same length.")
+        return
+
+    if len(ryd_list) == 0:
+        st.error("Input lists are empty.")
+        return
+
+    combined = sorted(zip(ryd_list, nufnu_list), key=lambda x: x[0])
+
+    buffer = StringIO()
+    for ryd, flux in combined:
+        buffer.write(f"{ryd:.6e}  {flux:.6e}\n")
+
+    file_content = buffer.getvalue()
+    buffer.close()
+
+    st.success("SED file created successfully.")
+    st.write(f"Points written: {len(combined)}")
+    st.write(
+        f"Energy range: "
+        f"{combined[0][0]:.4e} – {combined[-1][0]:.4e} Ryd"
+    )
+
+    st.download_button(
+        label="Download SED file",
+        data=file_content,
+        file_name=filename,
+        mime="text/plain",
+    )
 
 
 #-----------------------------------SECTION 4----------------------------------------------------------------------
@@ -621,8 +636,8 @@ def the_Frequency_vs_Luminosity_part2(p):
     if opts=='cloudy default units':
         xo=1e1
         xn=1e20
-        yo=1e-30
-        yn=1e10
+        yo=1e0
+        yn=1e30
         
         nuLnu=[nu*L for nu,L in zip(frequencies,luminosities)]
                  
