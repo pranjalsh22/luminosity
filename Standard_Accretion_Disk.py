@@ -142,13 +142,13 @@ def plot_log_scale(x_list, y_list,xo,xn,yo,yn,temperature=False,spectrumv=False,
       
     if spectrumv:
         #fill bg
-        plt.fill_between(np.linspace(0,3e9,5),np.linspace(1e43,1.1e43,5),alpha=0.3,label='radio')
-        plt.fill_between(np.linspace(3e9,3e12,5),np.linspace(1e43,1.1e43,5),alpha=0.3,label='microwave')
-        plt.fill_between(np.linspace(3e12,2.99e14,5),np.linspace(1e43,1.1e43,5),alpha=0.3,label='infrared')
-        plt.fill_between(np.linspace(3.01e14,7.5e14,5),np.linspace(1e43,1.1e43,5),alpha=0.3,label='visible')
-        plt.fill_between(np.linspace(7.5e14,3e16,5),np.linspace(1e43,1.1e43,5),alpha=0.3,label='UV')
-        plt.fill_between(np.linspace(3e16,3e19,5),np.linspace(1e43,1.1e43,5),alpha=0.3,label='X-ray')
-        plt.fill_between(np.linspace(3e19,3e30,5),np.linspace(1e43,1.1e43,5),alpha=0.3,label='Gamma-ray')
+        plt.fill_between(np.linspace(0,3e9,5),np.linspace(1e55,1.1e55,5),alpha=0.3,label='radio')
+        plt.fill_between(np.linspace(3e9,3e12,5),np.linspace(1e55,1.1e55,5),alpha=0.3,label='microwave')
+        plt.fill_between(np.linspace(3e12,2.99e14,5),np.linspace(1e55,1.1e55,5),alpha=0.3,label='infrared')
+        plt.fill_between(np.linspace(3.01e14,7.5e14,5),np.linspace(1e55,1.1e55,5),alpha=0.3,label='visible')
+        plt.fill_between(np.linspace(7.5e14,3e16,5),np.linspace(1e55,1.1e55,5),alpha=0.3,label='UV')
+        plt.fill_between(np.linspace(3e16,3e19,5),np.linspace(1e55,1.1e55,5),alpha=0.3,label='X-ray')
+        plt.fill_between(np.linspace(3e19,3e30,5),np.linspace(1e55,1.1e55,5),alpha=0.3,label='Gamma-ray')
 
         #to show F1 and F2
         if settings==True:
@@ -651,23 +651,26 @@ def the_Frequency_vs_Luminosity_part2(p):
         nuLnu_cgs =[i*1e7 for i in nuLnu]
         
         plot_log_scale(frequencies, nuLnu_cgs,xo,xn,yo,yn,spectrumv=True, xlabel=r'$log(\nu) in Hz$',ylabel=r'$log(\nu L_{\nu}) (erg/s)')
+       
+        create_cloudy_sed(freq_Ryd, nuLnu_cgs, filename="xex_mbh")        
+        
         st.header("How to make datafile cloudy friendly")
         col1,col2=st.columns([2,1])
         with col2:
+            st.header("When using through Terminal")
             st.write("1. Download data file.")
-            st.write("2. Open in excel to remove first column of indexes. keep one column of frequencies (Rydbergs)")
-            st.write("3. After the first entry write nuLnu Linear units rydberg.")
-            st.write("4. Remove end values where flux is 0, and starting points at extremely low freq")
-            st.write("5. Add 3 or more stars to mark end of file ***")
+            st.write("2. After the first entry write nuLnu Linear units rydberg.")
+            st.write("3. Remove end values where flux is 0, and starting points at extremely low freq")
+            st.write("4. Add 3 or more stars to mark end of file ***")
         with col1:
             st.header("CloudyOnline:")
             st.write("Download the datafile and upload in the sidebar of CloudyOnline to use as SED")
-        
+            st.link("CloudyOnline","https://cloudyonline.streamlit.app")
         frequencies = np.array([float(f) for f in frequencies], dtype=float)    
         #frequencies_log=np.log10(frequencies)
         #"freq (Hz)":frequencies,"log(freq) (Hz)":frequencies_log,"log(freq) (Ryd)":np.log10(freq_Ryd),
-        create_cloudy_sed(freq_Ryd, nuLnu_cgs, filename="xex_mbh")
-        st.write("LINK TO CLOUDY ONLINE AT THE BOTTOM OF THE PAGE")
+        
+        st.write("LINK TO ALL TOOLS AT THE BOTTOM OF THE PAGE")
         st.write("### DATAFILE")
         data={"freq (Ryd)":freq_Ryd,"nuLnu (erg/s)":nuLnu_cgs}    
         dataset=pd.DataFrame(data)
