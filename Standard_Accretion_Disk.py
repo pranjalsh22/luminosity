@@ -650,18 +650,17 @@ def the_Frequency_vs_Luminosity_part2(p):
         freq_Ryd=[i/3.28984196e15 for  i in frequencies]
         nuLnu_cgs =[i*1e7 for i in nuLnu]
         
-        plot_log_scale(frequencies, nuLnu_cgs,xo,xn,yo,yn,spectrumv=True, xlabel=r'$log(\nu) in Hz$',ylabel=r'$log(\nu L_{\nu}) (erg/s)')
+        plot_log_scale(frequencies, nuLnu_cgs,xo,xn,yo,yn,spectrumv=True, xlabel=r'$log(\nu) in Hz$',ylabel=r'$log(\nu L_{\nu})$ (erg/s)')
        
         create_cloudy_sed(freq_Ryd, nuLnu_cgs, filename="xex_mbh")        
         
-        st.header("How to make datafile cloudy friendly")
+        st.header("How to use as SED in Cloudy")
         col1,col2=st.columns([2,1])
         with col2:
             st.header("When using through Terminal")
             st.write("1. Download data file.")
-            st.write("2. After the first entry write nuLnu Linear units rydberg.")
-            st.write("3. Remove end values where flux is 0, and starting points at extremely low freq")
-            st.write("4. Add 3 or more stars to mark end of file ***")
+            st.write("2. Remove end values where flux is 0, and starting points at extremely low freq")
+            st.write("3. Add 3 or more stars to mark end of file ***")
         with col1:
             st.header("CloudyOnline:")
             st.write("Download the datafile and upload in the sidebar of CloudyOnline to use as SED")
