@@ -303,7 +303,7 @@ def flux_density_nu(nu, T):
 
 
 
-def create_cloudy_sed_streamlit(
+def create_cloudy_sed(
     ryd_list,
     nufnu_list,
     filename="my_sed.txt"
