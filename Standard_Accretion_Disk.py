@@ -300,7 +300,7 @@ def flux_density_nu(nu, T):
     return numerator / denominator
 
 
-def create_cloudy_sed_streamlit(ryd_list,nufnu_list,filename="my_sed.txt"):
+def create_cloudy_sed(ryd_list,nufnu_list,filename="my_sed.txt"):
     if len(ryd_list) != len(nufnu_list):
         st.error("Energy list and flux list must have the same length.")
         return
