@@ -6,6 +6,8 @@ from tabulate import tabulate
 import pandas as pd
 import warnings
 import os
+from io import BytesIO
+
 st.header("------------ACCLUM-1.00-------------")
 #----------------------------------SECTION 1----------------------------------------------------------
 # Suppress all warnings
@@ -300,7 +302,12 @@ def flux_density_nu(nu, T):
     return numerator / denominator
 
 
-def create_cloudy_sed(ryd_list,nufnu_list,filename="my_sed.txt"):
+
+def create_cloudy_sed_streamlit(
+    ryd_list,
+    nufnu_list,
+    filename="my_sed.txt"
+):
     if len(ryd_list) != len(nufnu_list):
         st.error("Energy list and flux list must have the same length.")
         return
@@ -311,9 +318,10 @@ def create_cloudy_sed(ryd_list,nufnu_list,filename="my_sed.txt"):
 
     combined = sorted(zip(ryd_list, nufnu_list), key=lambda x: x[0])
 
-    buffer = StringIO()
+    buffer = BytesIO()
     for ryd, flux in combined:
-        buffer.write(f"{ryd:.6e}  {flux:.6e}\n")
+        line = f"{ryd:.6e}  {flux:.6e}\n"
+        buffer.write(line.encode("ascii"))
 
     file_content = buffer.getvalue()
     buffer.close()
@@ -322,7 +330,7 @@ def create_cloudy_sed(ryd_list,nufnu_list,filename="my_sed.txt"):
     st.write(f"Points written: {len(combined)}")
     st.write(
         f"Energy range: "
-        f"{combined[0][0]:.4e} – {combined[-1][0]:.4e} Ryd"
+        f"{combined[0][0]:.4e} - {combined[-1][0]:.4e} Ryd"
     )
 
     st.download_button(
