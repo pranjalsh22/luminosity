@@ -645,7 +645,7 @@ def the_Frequency_vs_Luminosity_part2(p):
         xo=1e1
         xn=1e20
         yo=1e0
-        yn=1e30
+        yn=1e50
         
         nuLnu=[nu*L for nu,L in zip(frequencies,luminosities)]
                  
