@@ -15,7 +15,7 @@ st.header("------------ACCLUM-1.00-------------")
 warnings.filterwarnings("ignore")
 
 #set version
-st.sidebar.info(" ## Version 16")
+st.sidebar.info(" ## Version 17")
 st.sidebar.write("Developed by Pranjal Sharma")
 st.sidebar.write("Under the guidance of Dr. C. Konar")
 #----------------------------------SECTION 2----------------------------------------------------------
@@ -161,8 +161,8 @@ def plot_log_scale(x_list, y_list,xo,xn,yo,yn,temperature=False,spectrumv=False,
     
             FO12=st.checkbox("show frequency for 1st and second ionisation of oxygen",value=True,key=p*100+1)
             if FO12:
-                plt.plot([FO1,FO1],[0,10**24],label='First ionisation of oxygen')
-                plt.plot([FO2,FO2],[0,10**24],label='second ionisation of oxygen')
+                plt.plot([FO1,FO1],[0,10**50],label='First ionisation of oxygen')
+                plt.plot([FO2,FO2],[0,10**50],label='second ionisation of oxygen')
     if spectrume :
         p=220202
         
