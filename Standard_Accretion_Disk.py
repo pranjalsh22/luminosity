@@ -9,7 +9,7 @@ import os
 from io import BytesIO
 import base64
 
-st.header("------------ACCLUM-1.00-------------")
+#st.write("ACCLUM-1.00")
 #----------------------------------SECTION 1----------------------------------------------------------
 # Suppress all warnings
 #st.set_option('deprecation.showPyplotGlobalUse', False) 
@@ -415,29 +415,31 @@ t_i = temp(r_i_rs+0.1)
 F1=k*t_o/h
 F2=k*t_i/h
 st.sidebar.subheader('Parameters')
-st.sidebar.write(\
-    r"$ \dot{M} $"+f" = {m_dot:.4e} " + r"$ kg s^{-1} " +
-    r"$ \n "+
-    r"$ \dot{M} $"+f" = {m_dot*31557600/m_sun_kg:.4e} "+ r"$  M_{\odot} yr^{-1} $"
-    r" \n"+
-    r"$ M_{\bullet}" f"= {m_bh_kg} kg" +
-    r"$ \n"+
-    r"$ R_s "+f" = {r_s:.4e} m"
-    r"$ \n"+
-    r"$ R_i"+f" = {r_i:.4e} m"+
-    r"$ \n"+
-    r"$ R_o"+f" = {r_o:.4e} m"
-    r"$ \n"+
-    r"$ T_i"+f" = {t_i:.4e} K"
-    r"$ \n"+
-    r"$ T_o $"+f" = {t_o:.4e} K ")
-st.sidebar.write(f" cos(i) = {cos_i}"
-    r" \n ",
-    f" F1={F1:e} Hz",
-    r" \n "
-    f"F2={F2:e} Hz"
-    r" \n "
-    f"F2/F1={F2/F1:e}")
+st.sidebar.markdown(f"""
+$\\dot{{M}}$ = {m_dot:.4e} $kg\\ s^{{-1}}$
+
+$\\dot{{M}}$ = {m_dot*31557600/m_sun_kg:.4e} $M_{{\\odot}}\\ yr^{{-1}}$
+
+$M_\\bullet$ = {m_bh_kg} kg
+
+$R_s$ = {r_s:.4e} m
+
+$R_i$ = {r_i:.4e} m
+
+$R_o$ = {r_o:.4e} m
+
+$T_i$ = {t_i:.4e} K
+
+$T_o$ = {t_o:.4e} K
+
+cos(i) = {cos_i}
+
+F1 = {F1:e} Hz
+
+F2 = {F2:e} Hz
+
+F2/F1 = {F2/F1:e}
+""")
 
 #----------------------------------SECTION 5-----------------------------------------------------------------------
 
