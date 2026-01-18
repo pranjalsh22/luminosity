@@ -186,8 +186,8 @@ def plot_log_scale(x_list, y_list,xo,xn,yo,yn,temperature=False,spectrumv=False,
         if settings==True:
             F12=st.checkbox("show F1 and F2 (The point of change in slope of curve)",)
             if F12:
-                plt.plot([F1,F1],[0,10**24],label='F1')
-                plt.plot([F2,F2],[0,10**24],label='F2')
+                plt.plot([F1,F1],[0,10**50],label='F1')
+                plt.plot([F2,F2],[0,10**50],label='F2')
         
                 plt.plot()
     
