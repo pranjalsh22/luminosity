@@ -170,7 +170,7 @@ def plot_log_scale(x_list, y_list,xo,xn,yo,yn,temperature=False,spectrumv=False,
     plt.figure()
     fig, ax = plt.subplots()
     p=np.random.randint(100)
-    settings=st.checkbox("Graph settings",value=True,key=p*100)
+    settings=st.checkbox("Graph settings",value=False,key=p*100)
       
     if spectrumv:
         #fill bg
@@ -601,15 +601,13 @@ def the_Frequency_vs_Luminosity_part2(p):
     L_np=np.trapz(luminosities,frequencies)
 
     st.success(f"""
-    Bolometric Luminosity L = {L_np} Watts or {L_np*1e7} erg/s
-
-    Bolometric Luminosity log10(L) = {np.log10(L_np)} [Watts] or {np.log10(L_np*1e7)} [erg/s]
+    Bolometric Luminosity 
+    L = {L_np} Watts 
+    L = {L_np*1e7} erg/s
+    log10(L) = {np.log10(L_np)} [Watts] 
+    log10(L) = {np.log10(L_np*1e7)} [erg/s]
     """)
-    st.success(f"Bolometric Luminosity L = {L_np} Watts or {L_np*1e7} erg/s")
-    st.success(f"Bolometric Luminosity log10(L) = {np.log10(L_np)} [Watts] or {np.log10(L_np*1e7)} [erg/s] ")
-    #st.info(f"Bolometric Luminosity L = {L} Watts or {L*1e7} erg/s")
-    #st.info(f"Bolometric Luminosity log10(L) = {np.log10(L)} [Watts] or {np.log10(L*1e7)} [erg/s] ")
-    #integrating luminosity density for a fixed range of frequency
+    
     if st.checkbox("For custom range of frequency",value=True):
         #snipped net luminosity
         col1,col2,col3,col4,col5 =st.columns([0.3,0.3,0.1,0.3,0.4])
@@ -632,8 +630,8 @@ def the_Frequency_vs_Luminosity_part2(p):
         frequencies_snipped,luminosities_snipped = snip_data(frequencies, luminosities, x1, x2)
         L_snipped = integrate_curve(frequencies_snipped,luminosities_snipped,a=1e10,b=1e15)
         st.success(f"Net Luminosity from "+ r'$ \nu_1  =  $'+f" {x1:.2e} Hz ({spectrum_category(x1)}) to " + r"$ \nu_2  =  $"+ f"{x2:.2e} Hz ({spectrum_category(x2)})  is {L_snipped} Watts")
-        st.success(f"Average Luminosity density "+\
-               r'$ \bar{L} =\frac{ {\int_{\nu_1}^{\nu_2}}{L_\nu} d\nu} {\nu_2-\nu_1} = $' +f" {L_snipped/(x2-x1):e} Watts/Hz")
+        #st.success(f"Average Luminosity density "+\
+         #      r'$ \bar{L} =\frac{ {\int_{\nu_1}^{\nu_2}}{L_\nu} d\nu} {\nu_2-\nu_1} = $' +f" {L_snipped/(x2-x1):e} Watts/Hz")
 
     else:
         frequencies_snipped,luminosities_snipped = snip_data(frequencies, luminosities, 3e12, 4.3e14)
