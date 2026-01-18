@@ -184,13 +184,7 @@ def plot_log_scale(x_list, y_list,xo,xn,yo,yn,temperature=False,spectrumv=False,
 
         #to show F1 and F2
         if settings==True:
-            F12=st.checkbox("show F1 and F2 (The point of change in slope of curve)",)
-            if F12:
-                plt.plot([F1,F1],[0,10**50],label='F1')
-                plt.plot([F2,F2],[0,10**50],label='F2')
-        
-                plt.plot()
-    
+            
             FO12=st.checkbox("show frequency for 1st and second ionisation of oxygen",value=True,key=p*100+1)
             if FO12:
                 plt.plot([FO1,FO1],[0,10**50],label='First ionisation of oxygen')
