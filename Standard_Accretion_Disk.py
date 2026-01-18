@@ -409,26 +409,26 @@ F2=k*t_i/h
 st.sidebar.subheader('Parameters')
 st.sidebar.write(\
     r"$ \dot{M} $"+f" = {m_dot:.4e} " + r"$ kg s^{-1} " +
-    r"$ :s "+
+    r"$ \n "+
     r"$ \dot{M} $"+f" = {m_dot*31557600/m_sun_kg:.4e} "+ r"$  M_{\odot} yr^{-1} $"
-    r" :s"+
+    r" \n"+
     r"$ M_{\bullet}" f"= {m_bh_kg} kg" +
-    r"$ :s"+
+    r"$ \n"+
     r"$ R_s "+f" = {r_s:.4e} m"
-    r"$ :s"+
+    r"$ \n"+
     r"$ R_i"+f" = {r_i:.4e} m"+
-    r"$ :s"+
+    r"$ \n"+
     r"$ R_o"+f" = {r_o:.4e} m"
-    r"$ :s"+
+    r"$ \n"+
     r"$ T_i"+f" = {t_i:.4e} K"
-    r"$ :s"+
+    r"$ \n"+
     r"$ T_o $"+f" = {t_o:.4e} K ")
 st.sidebar.write(f" cos(i) = {cos_i}"
-    r" :s ",
+    r" \n ",
     f" F1={F1:e} Hz",
-    r" :s "
+    r" \n "
     f"F2={F2:e} Hz"
-    r" :s "
+    r" \n "
     f"F2/F1={F2/F1:e}")
 
 #----------------------------------SECTION 5-----------------------------------------------------------------------
@@ -544,13 +544,15 @@ def the_Frequency_vs_Luminosity_part2(p):
         st.write(r"$ \sigma \rightarrow  Stefan \ Bolzsmann \ constant $")
         st.write(r"$ h \rightarrow  Planck's \ constant $")
 
-    if st.checkbox(r"Derivation of $ \dot{M} $",value=True):
+    if st.checkbox(r"Derivation of $ \dot{M} $",value=False):
         st.latex(r"L = \zeta \dot{M} c^2")
         st.latex(r"L = \epsilon L_{Edd}")
         st.latex(r"\dot{M} = \frac{L}{\zeta c^2}")
         st.latex(r"\dot{M} = \frac{\epsilon L_{Edd}}{\zeta c^2}")
         st.latex(r" \dot{M} = \frac {\epsilon} {\zeta} \frac {1.3 \times 10^{31}}{c^2} \frac{M_{\bullet}}{M_{\odot}} ")    
-        
+
+    display_img(standard_disk.png, preview_width=400)
+    
     #spectrum range :
     if st.checkbox('show spectrum'):
         data = {
