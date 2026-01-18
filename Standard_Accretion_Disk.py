@@ -634,6 +634,7 @@ def the_Frequency_vs_Luminosity_part2(p):
         with col6:
             frequencies_snipped,luminosities_snipped = snip_data(frequencies, luminosities, x1, x2)
             L_snipped = integrate_curve(frequencies_snipped,luminosities_snipped,a=1e10,b=1e15)
+            ""
             st.success(f"{L_snipped:.4e} Watts")
         #st.success(f"Average Luminosity density "+\
          #      r'$ \bar{L} =\frac{ {\int_{\nu_1}^{\nu_2}}{L_\nu} d\nu} {\nu_2-\nu_1} = $' +f" {L_snipped/(x2-x1):e} Watts/Hz")
