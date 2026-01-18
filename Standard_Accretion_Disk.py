@@ -558,7 +558,7 @@ def the_Frequency_vs_Luminosity_part2(p):
     #    st.latex(r"\dot{M} = \frac{L}{\zeta c^2}")
     #    st.latex(r"\dot{M} = \frac{\epsilon L_{Edd}}{\zeta c^2}")
    #     st.latex(r" \dot{M} = \frac {\epsilon} {\zeta} \frac {1.3 \times 10^{31}}{c^2} \frac{M_{\bullet}}{M_{\odot}} ")    
-    col1,col2 = st.columns([1:2])
+    col1,col2 = st.columns([1,2])
     with col1:
         display_img("standard_disk.png", preview_width=400)
         
