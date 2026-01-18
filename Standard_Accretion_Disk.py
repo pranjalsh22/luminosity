@@ -7,6 +7,7 @@ import pandas as pd
 import warnings
 import os
 from io import BytesIO
+import base64
 
 st.header("------------ACCLUM-1.00-------------")
 #----------------------------------SECTION 1----------------------------------------------------------
@@ -19,6 +20,29 @@ st.sidebar.info(" ## Version 17")
 st.sidebar.write("Developed by Pranjal Sharma")
 st.sidebar.write("Under the guidance of Dr. C. Konar")
 #----------------------------------SECTION 2----------------------------------------------------------
+
+
+def display_img(image_file, preview_width=400):
+    ext = os.path.splitext(image_file)[1].lower()
+
+    mime = "png" if ext == ".png" else "jpeg"
+
+    with open(image_file, "rb") as f:
+        data = f.read()
+
+    encoded = base64.b64encode(data).decode()
+
+    st.markdown(
+        f"""
+        <div style="text-align:center;">
+            <img src="data:image/{mime};base64,{encoded}" 
+                 style="max-width:90%; width:{preview_width}px; border:4px solid #ccc; 
+                        box-shadow:5px 5px 15px rgba(0,0,0,0.3); border-radius:8px;">
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 
 #constants
 global G,m_sun_kg, c, sbc,pi, h,k 
