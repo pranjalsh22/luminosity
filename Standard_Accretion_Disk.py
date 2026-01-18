@@ -544,15 +544,19 @@ def the_Frequency_vs_Luminosity_part2(p):
         st.write(r"$ \sigma \rightarrow  Stefan \ Bolzsmann \ constant $")
         st.write(r"$ h \rightarrow  Planck's \ constant $")
 
-    if st.checkbox(r"Derivation of $ \dot{M} $",value=False):
-        st.latex(r"L = \zeta \dot{M} c^2")
-        st.latex(r"L = \epsilon L_{Edd}")
-        st.latex(r"\dot{M} = \frac{L}{\zeta c^2}")
-        st.latex(r"\dot{M} = \frac{\epsilon L_{Edd}}{\zeta c^2}")
-        st.latex(r" \dot{M} = \frac {\epsilon} {\zeta} \frac {1.3 \times 10^{31}}{c^2} \frac{M_{\bullet}}{M_{\odot}} ")    
-
-    display_img("standard_disk.png", preview_width=400)
-    
+   # if st.checkbox(r"Derivation of $ \dot{M} $",value=False):
+    #    st.latex(r"L = \zeta \dot{M} c^2")
+    #    st.latex(r"L = \epsilon L_{Edd}")
+    #    st.latex(r"\dot{M} = \frac{L}{\zeta c^2}")
+    #    st.latex(r"\dot{M} = \frac{\epsilon L_{Edd}}{\zeta c^2}")
+   #     st.latex(r" \dot{M} = \frac {\epsilon} {\zeta} \frac {1.3 \times 10^{31}}{c^2} \frac{M_{\bullet}}{M_{\odot}} ")    
+    col1,col2 = st.columns(2)
+    with col1:
+        display_img("standard_disk.png", preview_width=400)
+        
+    with col2:
+        display_img("AGN.jpg", preview_width=400)
+    st.write("Schematic diagram by the creator of the app.(Not to scale)")
     #spectrum range :
     if st.checkbox('show spectrum'):
         data = {
