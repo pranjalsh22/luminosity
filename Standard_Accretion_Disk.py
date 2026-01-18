@@ -614,7 +614,7 @@ def the_Frequency_vs_Luminosity_part2(p):
     
     if st.checkbox("For custom range of frequency",value=True):
         #snipped net luminosity
-        col1,col2,col3,col4,col5 =st.columns([0.6,0.4,0.3,0.4,0.5])
+        col1,col2,col3,col4,col5,col6 =st.columns([0.6,0.4,0.3,0.4,0.5,col6])
         with col1:
             ""
             ""
@@ -631,9 +631,10 @@ def the_Frequency_vs_Luminosity_part2(p):
             ""
             ""
             "Hz"
-        frequencies_snipped,luminosities_snipped = snip_data(frequencies, luminosities, x1, x2)
-        L_snipped = integrate_curve(frequencies_snipped,luminosities_snipped,a=1e10,b=1e15)
-        st.success(f"Net Luminosity from "+ r'$ \nu_1  =  $'+f" {x1:.2e} Hz ({spectrum_category(x1)}) to " + r"$ \nu_2  =  $"+ f"{x2:.2e} Hz ({spectrum_category(x2)})  is {L_snipped} Watts")
+        with col6:
+            frequencies_snipped,luminosities_snipped = snip_data(frequencies, luminosities, x1, x2)
+            L_snipped = integrate_curve(frequencies_snipped,luminosities_snipped,a=1e10,b=1e15)
+            st.success(f"{L_snipped} Watts")
         #st.success(f"Average Luminosity density "+\
          #      r'$ \bar{L} =\frac{ {\int_{\nu_1}^{\nu_2}}{L_\nu} d\nu} {\nu_2-\nu_1} = $' +f" {L_snipped/(x2-x1):e} Watts/Hz")
 
