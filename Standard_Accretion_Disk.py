@@ -170,7 +170,7 @@ def plot_log_scale(x_list, y_list,xo,xn,yo,yn,temperature=False,spectrumv=False,
     plt.figure()
     fig, ax = plt.subplots()
     p=np.random.randint(100)
-    settings=st.checkbox("Graph settings",value=False,key=p*100)
+    settings=st.checkbox("Graph settings",value=False,key="Graph_Settings")
       
     if spectrumv:
         #fill bg
@@ -239,7 +239,7 @@ def plot_log_scale(x_list, y_list,xo,xn,yo,yn,temperature=False,spectrumv=False,
 
     p+=4
     if settings:
-        set_range=st.checkbox("set x and y range",key=p+1,value=False)
+        set_range=st.checkbox("set x and y range",key="Range_set",value=False)
         if set_range:
             x1=st.number_input("lower limit of x", format="%e", value=xo)
             x2=st.number_input("upper limit of x", format="%e", value=xn)
