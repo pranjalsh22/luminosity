@@ -563,7 +563,7 @@ def the_Frequency_vs_Luminosity_part2(p):
         display_img("standard_disk.png", preview_width=400)
         
     with col2:
-        display_img("AGN.jpg", preview_width=400)
+        display_img("AGN.png", preview_width=400)
     st.write("Schematic diagram by the creator of the app.(Not to scale)")
     #spectrum range :
     if st.checkbox('show spectrum'):
