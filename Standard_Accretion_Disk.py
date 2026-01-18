@@ -602,9 +602,13 @@ def the_Frequency_vs_Luminosity_part2(p):
 
     st.success(f"""
     Bolometric Luminosity 
+    
     L = {L_np} Watts 
+    
     L = {L_np*1e7} erg/s
+    
     log10(L) = {np.log10(L_np)} [Watts] 
+    
     log10(L) = {np.log10(L_np*1e7)} [erg/s]
     """)
     
