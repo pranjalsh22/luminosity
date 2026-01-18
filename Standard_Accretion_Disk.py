@@ -614,7 +614,7 @@ def the_Frequency_vs_Luminosity_part2(p):
     
     if st.checkbox("For custom range of frequency",value=True):
         #snipped net luminosity
-        col1,col2,col3,col4,col5 =st.columns([0.3,0.3,0.1,0.3,0.4])
+        col1,col2,col3,col4,col5 =st.columns([0.4,0.4,0.3,0.4,0.5])
         with col1:
             ""
             ""
