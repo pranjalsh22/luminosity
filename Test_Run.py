@@ -17,8 +17,8 @@ st.sidebar.write("Developed by Pranjal Sharma")
 st.sidebar.write("Under the guidance of Dr. C. Konar")
 #----------------------------------SECTION 2----------------------------------------------------------
 
-import * from UI_functions
-import * from constants
+import UI_functions
+import constants
 
 see_constants = st.checkbox("View Constants",key="see_const")
 if see_constants:
