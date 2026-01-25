@@ -20,7 +20,7 @@ st.sidebar.write("Under the guidance of Dr. C. Konar")
 import UI_functions
 import constants
 
-see_constants = st.checkbox("View Constants",key="see_const")
+see_constants = st.sidebar.checkbox("View Constants",key="see_const")
 if see_constants:
     st.subheader("Constants from constants.py")
     for name, value in vars(constants).items():
@@ -237,7 +237,7 @@ def create_cloudy_sed(ryd_list,nuLnu_list,filename="my_sed.txt"):
 st.sidebar.markdown('# Input values')
 
 m_bh = st.sidebar.number_input("Mass of the black hole (solar masses)", value=1e7,format='%e')
-m_bh_kg = m_bh * m_sun_kg
+m_bh_kg = m_bh * constants.m_sun_kg
 
 # Calculate Schwarzschild radius
 r_s = 2 * G * m_bh_kg / c ** 2
