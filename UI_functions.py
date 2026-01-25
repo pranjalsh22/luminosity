@@ -1,3 +1,5 @@
+# USER DEFINED FUNCTIONS FOR USER INTERFACE 
+
 def display_img(image_file, preview_width=400):
 
     ext = os.path.splitext(image_file)[1].lower()
