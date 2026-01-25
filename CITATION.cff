@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+title: "ACCLUM: Accretion Disk Continuum and Luminosity Model"
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - family-names: Sharma
+    given-names: Pranjal
+    affiliation: Amity University Noida
+  - family-names: Konar
+    given-names: Chiranjib
+    affiliation: Amity University Noida
+keywords:
+  - accretion disks
+  - astrophysics
+  - AGN
+  - spectral energy distribution
+  - Shakura-Sunyaev
+version: "1.0"
+year: 2026
+license: BSD-3-Clause
