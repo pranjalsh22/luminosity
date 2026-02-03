@@ -1000,18 +1000,30 @@ for i, app in enumerate(apps):
 
 updt=st.checkbox("Update details")
 if updt:
-    st.write("""
+    st.markdown("""
     version 17: added downloadable file to use in CloudyOnline
+    
     version 16: added instructions to use it in cloudy 
+    
     version 15: added cloudy friendly data setup option 
+    
     version 14: changed to multiple graph select box, removed the option to check slope, now need to define
                 x and y range in plotlogscale itself, bg colour selected based on spectrumv or spectrume
-    version 13: Using symbols to show parameters + added m_dot equation + removed extra work  :s
-    version 12: improved string format and changed input frequency pattern, corrected snipped integration :s
-    version 11: added conversion calculator + custom freq selection while calculating net luminosity :s 
-    version 10: added snipped luminosity :s
-    version 9: added angle of inclination :s
-    version 8: added EF_E vs E graph by taking input of d and cgs option in EFE :s
-    version 7: added EL_E vs E graph and scaling + grid option :s
+                
+    version 13: Using symbols to show parameters + added m_dot equation + removed extra work  
+    
+    version 12: improved string format and changed input frequency pattern, corrected snipped integration 
+    
+    version 11: added conversion calculator + custom freq selection while calculating net luminosity 
+    
+    version 10: added snipped luminosity 
+    
+    version 9: added angle of inclination 
+    
+    version 8: added EF_E vs E graph by taking input of d and cgs option in EFE 
+    
+    version 7: added EL_E vs E graph and scaling + grid option 
+    
     version 6: added spectrum range colours
+    
     """)
