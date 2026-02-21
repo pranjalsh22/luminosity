@@ -19,6 +19,11 @@ warnings.filterwarnings("ignore")
 st.sidebar.info(" ## Version 17")
 st.sidebar.write("Developed by Pranjal Sharma")
 st.sidebar.write("Under the guidance of Dr. C. Konar")
+
+st.sidebar.markdown("[View Portfolio](https://pranjalsh22.wixsite.com/pranjalsharma)")
+st.sidebar.markdown("[Email Suggestions and Ideas](mailto:Ps.Sharmapranjal@gmail.com)")
+#st.sidebar.markdown("**Non-Commercial License:** Free for personal/research use.")
+
 #----------------------------------SECTION 2----------------------------------------------------------
 
 
