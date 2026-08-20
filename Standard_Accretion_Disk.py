@@ -313,7 +313,7 @@ def generate_pattern(n):
                     break
                 result.append(value)
         current *= 10
-    for i in range(1,int(r_i_rs+1)):
+    for i in range(1,int(r_i_rs)):
         try:
             result.remove(i)
         except:
