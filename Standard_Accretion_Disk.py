@@ -448,7 +448,7 @@ def the_R_vs_T_part(p):
     p+=1
     global radii, temperatures, tmax
     st.markdown('# Radius-Temperature relationship')
-    st.latex(r"where, T(r)^4 =\left( \frac {3GM_{BH}\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_{\mathrm ISCO}}{r}}}{r^3} \right]")
+    st.latex(r"where, T(r)^4 =\left( \frac {3GM_{BH}\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_{\mathrm{ISCO}}}{r}}}{r^3} \right]")
     # Creating list of radii
     radii = generate_pattern(r_o_rs)
 
