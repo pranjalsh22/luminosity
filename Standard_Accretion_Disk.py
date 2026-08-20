@@ -114,8 +114,8 @@ def Rs(m):
 def temp(rr):
     global t1,t2,t,r,t_disk
     r=rr*r_s
-    t1= (r_i/r)**(3/4)
-    t2= (1-(r_i/(r))**0.5)**(1/4)
+    t1= (INNER_R/r)**(3/4)
+    t2= (1-(INNER_R/(r))**0.5)**(1/4)
     t=t_disk*t1*t2
     return(t)
 
@@ -380,6 +380,8 @@ m_bh_kg = m_bh * m_sun_kg
 # Calculate Schwarzschild radius
 r_s = 2 * G * m_bh_kg / c ** 2
 
+INNER_R_rs = st.sidebar.number_input("Value of ISCO in units of Schwarzschild radius (r_s)", value=3,format='%e')
+INNER_R = INNER_R_rs * r_s
 # Input for r_i in units of r_s
 r_i_rs = st.sidebar.number_input("Value of r_i in units of Schwarzschild radius (r_s)", value=50,format='%e')
 r_i = r_i_rs * r_s
@@ -408,9 +410,9 @@ if choice =='Eddington ratio and accretion efficiency':
 angle_inclination = st.sidebar.number_input("Angle of inclination in degrees", value=0,format='%e')
 cos_i=np.cos(angle_inclination)
 #m_dot = eddington_ratio*1.3e31*m_bh_kg/(0.1*(c**2)*m_sun_kg)
-t_disk=(3*G*m_bh_kg*m_dot/(8*pi*sbc*(r_i**3)))**0.25
+t_disk=(3*G*m_bh_kg*m_dot/(8*pi*sbc*(INNER_R**3)))**0.25
 t_o = temp(r_o_rs)
-t_i = temp(r_i_rs+0.1)
+t_i = temp(r_i_rs)
 F1=k*t_o/h
 F2=k*t_i/h
 st.sidebar.subheader('Parameters')
