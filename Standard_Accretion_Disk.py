@@ -1,4 +1,4 @@
-"version17"
+"version18"
 import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -156,7 +156,7 @@ def luminosity(f):
 def ff2(r):
     try:
         t1= 3*G*m_bh_kg*m_dot/(8*pi*sbc)    
-        return (r) / (np.exp(h*f/(k*((t1*((1-(r_i/(r))**0.5)/r**3))**0.25)))-1)
+        return (r) / (np.exp(h*f/(k*((t1*((1-(INNER_R/(r))**0.5)/r**3))**0.25)))-1)
     except:
         print(f'there is an error at f={f}, r={r}')
 def luminosity2(ff):
@@ -164,7 +164,7 @@ def luminosity2(ff):
     global f
     f=ff
     A=16*(pi**2)*h*f**3/c**2
-    integration=simpsons_one_third_rule(ff2,r_i+r_s,r_o,10000,f)
+    integration=simpsons_one_third_rule(ff2,r_i,r_o,10000,f)
     lum=cos_i*A*integration
     return lum
 
@@ -408,7 +408,7 @@ if choice =='Eddington ratio and accretion efficiency':
     m_dot=m_dotf(eddington_ratio,accretion_efficiency)
 
 angle_inclination = st.sidebar.number_input("Angle of inclination in degrees", value=0,format='%e')
-cos_i=np.cos(angle_inclination)
+cos_i = np.cos(np.radians(angle_inclination))
 #m_dot = eddington_ratio*1.3e31*m_bh_kg/(0.1*(c**2)*m_sun_kg)
 t_disk=(3*G*m_bh_kg*m_dot/(8*pi*sbc*(INNER_R**3)))**0.25
 t_o = temp(r_o_rs)
@@ -448,7 +448,7 @@ def the_R_vs_T_part(p):
     p+=1
     global radii, temperatures, tmax
     st.markdown('# Radius-Temperature relationship')
-    st.latex(r"where, T(r)^4 =\left( \frac {3GM_{BH}\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_i}{r}}}{r^3} \right]")
+    st.latex(r"where, T(r)^4 =\left( \frac {3GM_{BH}\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_ISCO}{r}}}{r^3} \right]")
     # Creating list of radii
     radii = generate_pattern(r_o_rs)
 
@@ -543,7 +543,7 @@ def the_Frequency_vs_Luminosity_part2(p):
     col1,col2=st.columns([2,1.5])
     with  col1:
         st.latex(r" \dot{M} = \frac {\epsilon} {\zeta} \frac {1.3 \times 10^{31}}{c^2} \frac{M_{\bullet}}{M_{\odot}} ")    
-        st.latex(r"T(r)^4 =\left( \frac {3GM_{\bullet}\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_i}{r}}}{r^3} \right] \ \ K^4")
+        st.latex(r"T(r)^4 =\left( \frac {3GM_{\bullet}\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_ISCO}{r}}}{r^3} \right] \ \ K^4")
         st.latex(r'L_\nu = \frac{16 \pi^2 h \nu^3}{c^2} cosi \int_{r_i}^{r_o}  \frac{r}{e^{\frac{h \nu}{k T(r)}}-1} d r \ \ W Hz^{-1}')
     
     with col2:
