@@ -448,7 +448,7 @@ def the_R_vs_T_part(p):
     p+=1
     global radii, temperatures, tmax
     st.markdown('# Radius-Temperature relationship')
-    st.latex(r"where, T(r)^4 =\left( \frac {3GM_{BH}\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_ISCO}{r}}}{r^3} \right]")
+    st.latex(r"where, T(r)^4 =\left( \frac {3GM_{BH}\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_{ISCO}}{r}}}{r^3} \right]")
     # Creating list of radii
     radii = generate_pattern(r_o_rs)
 
@@ -543,7 +543,7 @@ def the_Frequency_vs_Luminosity_part2(p):
     col1,col2=st.columns([2,1.5])
     with  col1:
         st.latex(r" \dot{M} = \frac {\epsilon} {\zeta} \frac {1.3 \times 10^{31}}{c^2} \frac{M_{\bullet}}{M_{\odot}} ")    
-        st.latex(r"T(r)^4 =\left( \frac {3GM_{\bullet}\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_ISCO}{r}}}{r^3} \right] \ \ K^4")
+        st.latex(r"T(r)^4 =\left( \frac {3GM_{\bullet}\dot{M}} {8 \pi \sigma}\right)\left [\frac{1 - \sqrt{\frac{r_{ISCO}}{r}}}{r^3} \right] \ \ K^4")
         st.latex(r'L_\nu = \frac{16 \pi^2 h \nu^3}{c^2} cosi \int_{r_i}^{r_o}  \frac{r}{e^{\frac{h \nu}{k T(r)}}-1} d r \ \ W Hz^{-1}')
     
     with col2:
